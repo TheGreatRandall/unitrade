@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PatternMatcher;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +17,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
@@ -29,7 +25,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     private FirebaseAuth mAuth;
     private final String regex = "[a-z]+\\.{1}\\d+@{1}osu.edu";
-    private TextView registerSubmit;
+    private TextView registerSubmit, back, signIn;
     private EditText editNickname, editEmailAddress, editPassword;
     private ProgressBar progressBar;
 
@@ -40,12 +36,16 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         mAuth = FirebaseAuth.getInstance();
 
+        back = (Button) findViewById(R.id.register_back);
+        back.setOnClickListener(this);
         registerSubmit = (Button) findViewById(R.id.registerSubmit);
         registerSubmit.setOnClickListener(this);
+        signIn = (TextView) findViewById(R.id.register_SignIn);
+        signIn.setOnClickListener(this);
 
-        editNickname = (EditText) findViewById(R.id.editTextTextNickname);
-        editEmailAddress = (EditText) findViewById(R.id.editTextTextEmailAddress);
-        editPassword = (EditText) findViewById(R.id.editTextTextPassword);
+        editNickname = (EditText) findViewById(R.id.register_editTextNickname);
+        editEmailAddress = (EditText) findViewById(R.id.register_editTextEmailAddress);
+        editPassword = (EditText) findViewById(R.id.register_editTextPassword);
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
     }
@@ -53,12 +53,18 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.banner:
-                startActivity(new Intent(this, MainActivity.class));
+            case R.id.register_back:
+                Intent backActivity = new Intent(this, MainActivity.class);
+                backActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(backActivity);
                 break;
             case R.id.registerSubmit:
                 submit();
                 break;
+            case R.id.register_SignIn:
+                Intent loginActivity = new Intent(this, Login.class);
+                loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(loginActivity);
         }
     }
 

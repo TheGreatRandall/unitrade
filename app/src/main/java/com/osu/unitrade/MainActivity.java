@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView register;
+    private TextView register, login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
+
+        login = (TextView) findViewById(R.id.login);
+        login.setOnClickListener(this);
     }
 
     @Override
@@ -25,6 +28,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        switch (v.getId()) {
            case R.id.register:
                startActivity(new Intent(this, Register.class));
+               break;
+           case R.id.login:
+               startActivity(new Intent(this, Login.class));
                break;
        }
     }
