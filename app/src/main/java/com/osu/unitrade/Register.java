@@ -47,7 +47,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         editEmailAddress = (EditText) findViewById(R.id.register_editTextEmailAddress);
         editPassword = (EditText) findViewById(R.id.register_editTextPassword);
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.register_progressBar);
     }
 
     @Override
