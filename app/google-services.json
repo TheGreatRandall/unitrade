@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "329791651532",
+    "project_id": "unitrade-a8a40",
+    "storage_bucket": "unitrade-a8a40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329791651532:android:27428c0b06aff694000c69",
+        "android_client_info": {
+          "package_name": "com.osu.unitrade"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329791651532-o8rqvabge5988trds41bc8ftcmq2p3ju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZdB0VyhuEsAs3F4TkJE5XiR9ipzurqDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329791651532-o8rqvabge5988trds41bc8ftcmq2p3ju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
