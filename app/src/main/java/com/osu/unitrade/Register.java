@@ -25,7 +25,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     private FirebaseAuth mAuth;
     private final String regex = "[a-z]+\\.{1}\\d+@{1}osu.edu";
-    private static final String registerTag = "Register";
     private TextView registerSubmit, back, signIn;
     private EditText editNickname, editEmailAddress, editPassword;
     private ProgressBar progressBar;
@@ -33,7 +32,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(registerTag, "Register onCreate(Bundle) called");
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
@@ -127,34 +125,5 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        Log.d(registerTag, "Register onStart() called");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(registerTag, "Register onResume() called");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(registerTag, "Register onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(registerTag, "Register Activity onStop() called");
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        Log.d(registerTag, "Register Activity onDestroy() called");
-    }
 
 }
