@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class Login extends AppCompatActivity implements View.OnClickListener{
+import java.util.regex.Pattern;
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private final String regex = "[a-z]+\\.{1}\\d+@{1}osu.edu";
@@ -28,8 +30,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("Lifecycle","------------login activity is on create----------");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mAuth = FirebaseAuth.getInstance();
 
         back = (Button) findViewById(R.id.login_back);
         back.setOnClickListener(this);
@@ -46,6 +51,36 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("Lifecycle","------------login activity is onStart----------");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Lifecycle","------------login activity is onStop----------");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Lifecycle","------------login activity is onDestroy----------");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Lifecycle","------------login activity is onPause----------");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Lifecycle","------------login activity is onResume----------");
+    }
+
+    @Override
     public void onClick(View v){
         switch (v.getId()){
             case R.id.login_back:
@@ -54,7 +89,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 startActivity(backActivity);
                 break;
             case R.id.login_SignUp:
-                Intent registerActivity = new Intent(this, Register.class);
+                Intent registerActivity = new Intent(this, RegisterActivity.class);
                 registerActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(registerActivity);
                 break;
@@ -74,8 +109,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            editEmailAddress.setError("Please enter a valid email!");
+        if (!Pattern.compile(regex).matcher(email).matches()) {
+            editEmailAddress.setError("Please enter a valid OSU email.");
             editEmailAddress.requestFocus();
             return;
         }
@@ -104,12 +139,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    // Direct to main page
-
-
+                    Log.d("Success", "signInWithEmailAndPassword:success");
+                    Toast.makeText(LoginActivity.this, "User logged in.", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 }else{
-                    Toast.makeText(Login.this, "Unvaild email address or password entered to login!",Toast.LENGTH_LONG).show();
+                    Log.w("Error", "signInWithEmailAndPassword:failure", task.getException());
+                    Toast.makeText(LoginActivity.this, "Invalid email address or password entered to login!",Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
                 }
             }

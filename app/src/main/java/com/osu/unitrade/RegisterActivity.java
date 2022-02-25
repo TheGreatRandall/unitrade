@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
-public class Register extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private final String regex = "[a-z]+\\.{1}\\d+@{1}osu.edu";
@@ -51,6 +51,36 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("Lifecycle","------------register activity is onStart----------");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Lifecycle","------------register activity is onStop----------");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Lifecycle","------------register activity is onDestroy----------");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Lifecycle","------------register activity is onPause----------");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("Lifecycle","------------register activity is onResume----------");
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.register_back:
@@ -62,7 +92,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 submit();
                 break;
             case R.id.register_SignIn:
-                Intent loginActivity = new Intent(this, Login.class);
+                Intent loginActivity = new Intent(this, LoginActivity.class);
                 loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(loginActivity);
         }
@@ -103,10 +133,10 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(Register.this, "User registered.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, "User registered.", Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
                             } else {
-                                Toast.makeText(Register.this, "Failed to register database.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, "Failed to register database.", Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
@@ -114,12 +144,11 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Error", "createUserWithEmail:failure", task.getException());
-                    Toast.makeText(Register.this, "Failed to register.",
+                    Toast.makeText(RegisterActivity.this, "Failed to register.",
                             Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
                 }
 
-                // ...
             }
         });
 
