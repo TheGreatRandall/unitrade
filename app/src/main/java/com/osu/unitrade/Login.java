@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private final String regex = "[a-z]+\\.{1}\\d+@{1}osu.edu";
+    private static final String loginTag = "Login";
     private TextView back, login, signUp;
     private EditText editEmailAddress, editPassword;
     private ProgressBar progressBar;
@@ -29,6 +31,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(loginTag, "Login onCreate(Bundle) called");
         setContentView(R.layout.activity_login);
 
         back = (Button) findViewById(R.id.login_back);
@@ -115,4 +118,35 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
             }
         });
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(loginTag, "Login Activity onStart() called");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(loginTag, "Login Activity onResume() called");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(loginTag, "Login Activity onPause() called");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(loginTag, "Login Activity onStop() called");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(loginTag, "Login Activity onDestroy() called");
+    }
+
 }
