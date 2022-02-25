@@ -51,29 +51,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Toast.makeText(getApplicationContext(), "onStart called", Toast.LENGTH_LONG).show();
-    }
-
-
-    @Override
-    protected void onResume() {
-
-        super.onResume();
-        Toast.makeText(getApplicationContext(), "onResumed called", Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    protected void onPause() {
-
-        super.onResume();
-        Toast.makeText(getApplicationContext(), "onPause called", Toast.LENGTH_LONG).show();
-
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.register_back:
@@ -136,7 +113,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     });
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w("Warning", "createUserWithEmail:failure", task.getException());
+                    Log.w("Error", "createUserWithEmail:failure", task.getException());
                     Toast.makeText(Register.this, "Failed to register.",
                             Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
