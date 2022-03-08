@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.regex.Pattern;
 
@@ -24,7 +25,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private FirebaseAuth mAuth;
     private final String regex = "[a-z]+\\.{1}\\d+@{1}osu.edu";
-    private TextView back, login, signUp;
+    private TextView back, login, signUp, forgetPassword;
     private EditText editEmailAddress, editPassword;
     private ProgressBar progressBar;
 
@@ -43,6 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         signUp = (TextView) findViewById(R.id.login_SignUp);
         signUp.setOnClickListener(this);
+        forgetPassword = (TextView) findViewById(R.id.login_ForgetPassword);
+        forgetPassword.setOnClickListener(this);
 
         editEmailAddress = (EditText) findViewById(R.id.login_editTextEmailAddress);
         editPassword = (EditText) findViewById(R.id.login_editTextPassword);
@@ -93,6 +96,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 registerActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(registerActivity);
                 break;
+            case R.id.login_ForgetPassword:
+                Intent resetActivity = new Intent(this, ResetPasswordActivity.class);
+                resetActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(resetActivity);
+                break;
             case R.id.login_loginButton:
                 userLogin();
                 break;
@@ -139,10 +147,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Log.d("Success", "signInWithEmailAndPassword:success");
-                    Toast.makeText(LoginActivity.this, "User logged in.", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                    if(user.isEmailVerified()){
+                        Log.d("Success", "signInWithEmailAndPassword:success");
+                        Toast.makeText(LoginActivity.this, "User logged in.", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    }else{
+                        Toast.makeText(LoginActivity.this,"Your email hasn't been verified!", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+
+
                 }else{
                     Log.w("Error", "signInWithEmailAndPassword:failure", task.getException());
                     Toast.makeText(LoginActivity.this, "Invalid email address or password entered to login!",Toast.LENGTH_LONG).show();

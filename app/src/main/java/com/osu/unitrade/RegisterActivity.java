@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
@@ -133,8 +134,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(RegisterActivity.this, "User registered.", Toast.LENGTH_LONG).show();
-                                progressBar.setVisibility(View.GONE);
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                if(!user.isEmailVerified()){
+                                    Toast.makeText(RegisterActivity.this, "A verification email has been sent to your email.", Toast.LENGTH_LONG).show();
+                                    user.sendEmailVerification();
+                                    progressBar.setVisibility(View.GONE);
+                                }
+
                             } else {
                                 Toast.makeText(RegisterActivity.this, "Failed to register database.", Toast.LENGTH_LONG).show();
                                 progressBar.setVisibility(View.GONE);
