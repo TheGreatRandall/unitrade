@@ -7,10 +7,10 @@
     tools:context=".HomeActivity">
 
     <Button
-        android:id="@+id/profile"
+        android:id="@+id/addListing"
         android:layout_width="134dp"
         android:layout_height="53dp"
-        android:text="profile"
+        android:text="add listing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/setting"
         app:layout_constraintHorizontal_bias="0.0"
@@ -26,7 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/setting"
         app:layout_constraintHorizontal_bias="0.444"
-        app:layout_constraintStart_toEndOf="@+id/profile"
+        app:layout_constraintStart_toEndOf="@+id/addListing"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 

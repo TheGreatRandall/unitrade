@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -37,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        profile = (Button) findViewById(R.id.profile);
+        profile = (Button) findViewById(R.id.addListing);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -64,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString("nickname", HomeActivity.this.nickname);
-                ProfileFragment fragment = new ProfileFragment();
+                AddListingFragment fragment = new AddListingFragment();
                 fragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
             }
