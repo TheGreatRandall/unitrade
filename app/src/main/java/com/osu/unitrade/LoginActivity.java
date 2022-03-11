@@ -155,7 +155,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         progressBar.setVisibility(View.GONE);
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     }else{
-                        Toast.makeText(LoginActivity.this,"Your email hasn't been verified!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this,"Your email hasn't been verified! An email verification has been sent to your email!", Toast.LENGTH_LONG).show();
+                        user.sendEmailVerification();
                         progressBar.setVisibility(View.GONE);
                     }
 
