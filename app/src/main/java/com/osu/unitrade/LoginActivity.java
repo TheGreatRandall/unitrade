@@ -50,6 +50,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editEmailAddress = (EditText) findViewById(R.id.login_editTextEmailAddress);
         editPassword = (EditText) findViewById(R.id.login_editTextPassword);
 
+        editEmailAddress.setText("chen.8095@osu.edu");
+        editPassword.setText("925816");
+
         progressBar = (ProgressBar) findViewById(R.id.login_progressBar);
     }
 

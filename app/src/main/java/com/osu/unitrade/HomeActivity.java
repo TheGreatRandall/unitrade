@@ -26,7 +26,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private String nickname;
 
-    private Button profile;
+    private Button addListing;
+    private Button myListing;
     private Button setting;
 
     private Fragment fragment;
@@ -36,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        profile = (Button) findViewById(R.id.addListing);
+        addListing = (Button) findViewById(R.id.addListing);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -46,7 +47,6 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User userProfile = snapshot.getValue(User.class);
                 if (userProfile != null) {
-
                     String nick = userProfile.nickname;
                     HomeActivity.this.nickname = nick;
                 }
@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        profile.setOnClickListener(new View.OnClickListener() {
+        addListing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
@@ -68,6 +68,20 @@ public class HomeActivity extends AppCompatActivity {
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
             }
         });
+
+        myListing = (Button) findViewById(R.id.myListing);
+        myListing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("nickname", HomeActivity.this.nickname);
+                MylistingFragment fragment = new MylistingFragment();
+                fragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+            }
+        });
+
+
         setting = (Button) findViewById(R.id.setting);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
