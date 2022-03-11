@@ -41,8 +41,8 @@ public class AddListingFragment extends Fragment {
     private DatabaseReference mDatabase;
 
     private FirebaseUser user;
-    private String userID;
-    private String nickname;
+    private String userID, listID;
+    private String key, nickname;
 
     private ProgressBar progressBar;
 
@@ -58,10 +58,10 @@ public class AddListingFragment extends Fragment {
      * @return A new instance of fragment ProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddListingFragment newInstance(String nickname) {
+    public static AddListingFragment newInstance(String listID) {
         AddListingFragment fragment = new AddListingFragment();
         Bundle args = new Bundle();
-        args.putString("nickname", nickname);
+        args.putString("listID", listID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,6 +69,12 @@ public class AddListingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            listID = bundle.getString("listID");
+        }
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
@@ -97,12 +103,37 @@ public class AddListingFragment extends Fragment {
         submit = rootView.findViewById(R.id.addListingSubmit);
         title = rootView.findViewById(R.id.AddListingTitle);
         description = rootView.findViewById(R.id.addListingDescription);
+
+        if(listID != null){
+            key = listID;
+
+            mDatabase.child("Listings/" + listID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Listing listing = snapshot.getValue(Listing.class);
+                    if(listing != null){
+                        title.setText(listing.getTitle());
+                        description.setText(listing.getDescription());
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
         progressBar = rootView.findViewById(R.id.addListing_progressBar);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String key = mDatabase.child("Listings").push().getKey();
-                Listing listing = new Listing(userID, title.getText().toString(), description.getText().toString());
+                if(key == null){
+                    key = mDatabase.child("Listings").push().getKey();
+                }
+
+                Listing listing = new Listing(userID, title.getText().toString(),    description.getText().toString());
                 Map<String, Object> listingValues = listing.toMap();
                 Map<String, Object> childUpdates = new HashMap<>();
                 childUpdates.put("/Listings/" + key, listingValues);
@@ -111,7 +142,7 @@ public class AddListingFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(requireActivity(), "added", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(requireActivity(), "failed", Toast.LENGTH_SHORT).show();
                         }

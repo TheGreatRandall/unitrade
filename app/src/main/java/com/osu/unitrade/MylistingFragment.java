@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,6 +40,7 @@ public class MylistingFragment extends Fragment {
     RecyclerView recyclerView;
     DatabaseReference database;
     ListingAdapter listingAdapter;
+    ArrayList<String> listingIdList;
     ArrayList<Listing> list;
     private String userID;
     private FirebaseUser user;
@@ -87,7 +89,8 @@ public class MylistingFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         list = new ArrayList<>();
-        listingAdapter = new ListingAdapter(requireContext(), list);
+        listingIdList = new ArrayList<>();
+        listingAdapter = new ListingAdapter(requireContext(), listingIdList, list);
         recyclerView.setAdapter(listingAdapter);
 
         database.addValueEventListener(new ValueEventListener() {
@@ -95,9 +98,12 @@ public class MylistingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    String listingID = dataSnapshot.getKey();
                     Listing listing = dataSnapshot.getValue(Listing.class);
+                    listingIdList.add(listingID);
                     list.add(listing);
                 }
+
                 listingAdapter.notifyDataSetChanged();
             }
 
