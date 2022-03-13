@@ -1,4 +1,4 @@
-package com.osu.unitrade;
+package com.osu.unitrade.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +19,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.osu.unitrade.R;
+import com.osu.unitrade.entity.User;
 
 import java.util.regex.Pattern;
 

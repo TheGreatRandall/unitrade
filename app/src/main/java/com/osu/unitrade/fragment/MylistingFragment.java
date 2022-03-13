@@ -1,4 +1,4 @@
-package com.osu.unitrade;
+package com.osu.unitrade.fragment;
 
 import android.os.Bundle;
 
@@ -18,9 +18,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.osu.unitrade.adapter.ListingAdapter;
+import com.osu.unitrade.R;
+import com.osu.unitrade.entity.Listing;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,7 +111,6 @@ public class MylistingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 

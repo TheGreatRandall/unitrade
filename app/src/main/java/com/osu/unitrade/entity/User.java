@@ -1,4 +1,4 @@
-package com.osu.unitrade;
+package com.osu.unitrade.entity;
 
 public class User {
 

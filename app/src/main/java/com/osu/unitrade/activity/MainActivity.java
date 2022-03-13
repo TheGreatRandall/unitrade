@@ -1,4 +1,4 @@
-package com.osu.unitrade;
+package com.osu.unitrade.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+
+import com.osu.unitrade.R;
+import com.osu.unitrade.activity.LoginActivity;
+import com.osu.unitrade.activity.RegisterActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

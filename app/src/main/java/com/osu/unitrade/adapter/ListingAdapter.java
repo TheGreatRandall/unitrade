@@ -1,4 +1,4 @@
-package com.osu.unitrade;
+package com.osu.unitrade.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.osu.unitrade.R;
+import com.osu.unitrade.entity.Listing;
+import com.osu.unitrade.fragment.AddListingFragment;
 
 import java.util.ArrayList;
 
@@ -27,6 +31,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
     ArrayList<String> idList;
     ArrayList<Listing> list;
     DatabaseReference database;
+    ProgressBar progressBar;
 
     private String userID;
     private FirebaseUser user;
@@ -54,6 +59,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
         holder.lastName.setText(user.getDescription());
         holder.list = user;
         holder.listID = listId;
+
     }
 
     @Override
@@ -68,37 +74,51 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
         Button update, delete;
         Listing list;
         String listID;
+        ProgressBar progressBar;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            firstName = itemView.findViewById(R.id.tvfirstName);
-            lastName = itemView.findViewById(R.id.tvlastName);
+            progressBar = itemView.findViewById(R.id.listingProgressBar);
+            firstName = itemView.findViewById(R.id.listingTitle);
+            lastName = itemView.findViewById(R.id.listingDescription);
             update = itemView.findViewById(R.id.update);
             delete = itemView.findViewById(R.id.delete);
 
             user = FirebaseAuth.getInstance().getCurrentUser();
             userID = user.getUid();
 
-            update.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("listID", listID);
-                    AddListingFragment fragment = new AddListingFragment();
-                    fragment.setArguments(bundle);
-                    ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-                }
+            update.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("listID", listID);
+                AddListingFragment fragment = new AddListingFragment();
+                fragment.setArguments(bundle);
+                ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
             });
 
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    progressBar.setVisibility(View.VISIBLE);
                     database = FirebaseDatabase.getInstance().getReference("Listings/" + listID);
-                    database.removeValue();
-
+                    database.removeValue().addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            Log.d("Update listings"+listID,"Success");
+                            Toast.makeText(view.getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(view.getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     database = FirebaseDatabase.getInstance().getReference("User-Listings/" + userID + "/" + listID);
-                    database.removeValue();
+                    database.removeValue().addOnCompleteListener(task -> {
+                        if(task.isSuccessful()){
+                            Log.d("Update user listings"+listID,"Success");
+                            Toast.makeText(view.getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(view.getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                        progressBar.setVisibility(View.INVISIBLE);
+                    });
                 }
             });
         }

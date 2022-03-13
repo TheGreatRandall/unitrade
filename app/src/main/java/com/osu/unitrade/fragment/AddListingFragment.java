@@ -1,4 +1,4 @@
-package com.osu.unitrade;
+package com.osu.unitrade.fragment;
 
 import android.os.Bundle;
 
@@ -23,6 +23,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.osu.unitrade.R;
+import com.osu.unitrade.entity.Listing;
+import com.osu.unitrade.entity.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -129,6 +132,7 @@ public class AddListingFragment extends Fragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
                 if(key == null){
                     key = mDatabase.child("Listings").push().getKey();
                 }
@@ -142,10 +146,14 @@ public class AddListingFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
+                            title.setText("");
+                            description.setText("");
+                            key = mDatabase.child("Listings").push().getKey();
                             Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(requireActivity(), "failed", Toast.LENGTH_SHORT).show();
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
             }

@@ -1,4 +1,4 @@
-package com.osu.unitrade;
+package com.osu.unitrade.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +16,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.osu.unitrade.fragment.AddListingFragment;
+import com.osu.unitrade.fragment.MylistingFragment;
+import com.osu.unitrade.R;
+import com.osu.unitrade.fragment.SettingFragment;
+import com.osu.unitrade.entity.User;
 
 public class HomeActivity extends AppCompatActivity {
 
