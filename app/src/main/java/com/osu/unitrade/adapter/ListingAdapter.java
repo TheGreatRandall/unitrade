@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.osu.unitrade.R;
-import com.osu.unitrade.entity.Listing;
+import com.osu.unitrade.model.Listing;
 import com.osu.unitrade.fragment.AddListingFragment;
 
 import java.util.ArrayList;
@@ -31,12 +31,11 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
     ArrayList<String> idList;
     ArrayList<Listing> list;
     DatabaseReference database;
-    ProgressBar progressBar;
 
     private String userID;
     private FirebaseUser user;
 
-    public ListingAdapter(Context context, ArrayList<String> idList,ArrayList<Listing> list) {
+    public ListingAdapter(Context context, ArrayList<String> idList, ArrayList<Listing> list) {
         this.context = context;
         this.idList = idList;
         this.list = list;
@@ -45,19 +44,19 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(context).inflate(R.layout.item,parent,false);
-        return  new MyViewHolder(v);
+        View v = LayoutInflater.from(context).inflate(R.layout.item, parent, false);
+        return new MyViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         String listId = idList.get(position);
-        Listing user = list.get(position);
+        Listing listing = list.get(position);
 
-        holder.firstName.setText(user.getTitle());
-        holder.lastName.setText(user.getDescription());
-        holder.list = user;
+        holder.firstName.setText(listing.getTitle());
+        holder.lastName.setText(listing.getDescription());
+        holder.list = listing;
         holder.listID = listId;
 
     }
@@ -68,7 +67,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
     }
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView firstName, lastName;
         Button update, delete;
@@ -93,33 +92,30 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
                 bundle.putString("listID", listID);
                 AddListingFragment fragment = new AddListingFragment();
                 fragment.setArguments(bundle);
-                ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
             });
 
-            delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    progressBar.setVisibility(View.VISIBLE);
-                    database = FirebaseDatabase.getInstance().getReference("Listings/" + listID);
-                    database.removeValue().addOnCompleteListener(task -> {
-                        if(task.isSuccessful()){
-                            Log.d("Update listings"+listID,"Success");
-                            Toast.makeText(view.getContext(), "Success", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(view.getContext(), "Failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    database = FirebaseDatabase.getInstance().getReference("User-Listings/" + userID + "/" + listID);
-                    database.removeValue().addOnCompleteListener(task -> {
-                        if(task.isSuccessful()){
-                            Log.d("Update user listings"+listID,"Success");
-                            Toast.makeText(view.getContext(), "Success", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(view.getContext(), "Failed", Toast.LENGTH_SHORT).show();
-                        }
-                        progressBar.setVisibility(View.INVISIBLE);
-                    });
-                }
+            delete.setOnClickListener(view -> {
+                progressBar.setVisibility(View.VISIBLE);
+                database = FirebaseDatabase.getInstance().getReference("Listings/" + listID);
+                database.removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("Update listings" + listID, "Success");
+                        Toast.makeText(view.getContext(), "Success", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(view.getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                database = FirebaseDatabase.getInstance().getReference("User-Listings/" + userID + "/" + listID);
+                database.removeValue().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("Update user listings" + listID, "Success");
+                        Toast.makeText(view.getContext(), "Success", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(view.getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                    progressBar.setVisibility(View.INVISIBLE);
+                });
             });
         }
     }

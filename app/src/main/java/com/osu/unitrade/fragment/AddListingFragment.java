@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,8 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.osu.unitrade.R;
-import com.osu.unitrade.entity.Listing;
-import com.osu.unitrade.entity.User;
+import com.osu.unitrade.model.Listing;
+import com.osu.unitrade.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +72,7 @@ public class AddListingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             listID = bundle.getString("listID");
         }
 
@@ -89,6 +87,7 @@ public class AddListingFragment extends Fragment {
                     nickname = userProfile.nickname;
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(requireActivity(), "fail to get user", Toast.LENGTH_SHORT).show();
@@ -100,21 +99,21 @@ public class AddListingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.d("Lifecycle","------------profile fragment is onCreateView----------");
+        Log.d("Lifecycle", "------------profile fragment is onCreateView----------");
 
-        View rootView = inflater.inflate(R.layout.fragment_add_listing, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_addlisting, container, false);
         submit = rootView.findViewById(R.id.addListingSubmit);
         title = rootView.findViewById(R.id.AddListingTitle);
         description = rootView.findViewById(R.id.addListingDescription);
 
-        if(listID != null){
+        if (listID != null) {
             key = listID;
 
             mDatabase.child("Listings/" + listID).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Listing listing = snapshot.getValue(Listing.class);
-                    if(listing != null){
+                    if (listing != null) {
                         title.setText(listing.getTitle());
                         description.setText(listing.getDescription());
                     }
@@ -123,40 +122,34 @@ public class AddListingFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
         progressBar = rootView.findViewById(R.id.addListing_progressBar);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                if(key == null){
-                    key = mDatabase.child("Listings").push().getKey();
-                }
-
-                Listing listing = new Listing(userID, title.getText().toString(),    description.getText().toString());
-                Map<String, Object> listingValues = listing.toMap();
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/Listings/" + key, listingValues);
-                childUpdates.put("/User-Listings/" + userID + "/" + key, listingValues);
-                mDatabase.updateChildren(childUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            title.setText("");
-                            description.setText("");
-                            key = mDatabase.child("Listings").push().getKey();
-                            Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
-                        }else{
-                            Toast.makeText(requireActivity(), "failed", Toast.LENGTH_SHORT).show();
-                        }
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+        submit.setOnClickListener(view -> {
+            progressBar.setVisibility(View.VISIBLE);
+            if (key == null) {
+                key = mDatabase.child("Listings").push().getKey();
             }
+
+            Listing listing = new Listing(userID, title.getText().toString(), description.getText().toString());
+            Map<String, Object> listingValues = listing.toMap();
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put("/Listings/" + key, listingValues);
+            childUpdates.put("/User-Listings/" + userID + "/" + key, listingValues);
+            mDatabase.updateChildren(childUpdates).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    title.setText("");
+                    description.setText("");
+                    key = mDatabase.child("Listings").push().getKey();
+                    Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireActivity(), "failed", Toast.LENGTH_SHORT).show();
+                }
+                progressBar.setVisibility(View.GONE);
+            });
         });
         return rootView;
     }

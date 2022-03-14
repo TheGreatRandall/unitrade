@@ -7,6 +7,16 @@
     android:background="@color/white"
     tools:context=".fragment.AddListingFragment">
 
+    <TextView
+        android:layout_width="375dp"
+        android:layout_height="55dp"
+        android:text="My Listings"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/AddListingTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/addListingSubmit"
         android:layout_width="140dp"
@@ -31,7 +41,7 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.099" />
+        app:layout_constraintVertical_bias="0.121" />
 
     <EditText
         android:id="@+id/addListingDescription"

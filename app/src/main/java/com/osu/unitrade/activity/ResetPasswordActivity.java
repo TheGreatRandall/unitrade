@@ -27,7 +27,6 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     private ProgressBar progressBar;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +46,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.reset_resetPassword:
                 resetPassword();
                 break;
@@ -61,36 +60,33 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
 
     }
 
-    private void resetPassword(){
+    private void resetPassword() {
         String email = emailEditText.getText().toString().trim();
 
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             emailEditText.setError("Email is required!");
             emailEditText.requestFocus();
             return;
         }
 
-        if(!Pattern.compile(regex).matcher(email).matches()){
+        if (!Pattern.compile(regex).matcher(email).matches()) {
             emailEditText.setError("Please provide valid email!");
             emailEditText.requestFocus();
             return;
         }
 
         progressBar.setVisibility(View.VISIBLE);
-        mauth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(ResetPasswordActivity.this, "Check your email to rest your password!", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
+        mauth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(ResetPasswordActivity.this, "Check your email to rest your password!", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
 
-                    Intent loginActivity = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-                    loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(loginActivity);
-                }else{
-                    Toast.makeText(ResetPasswordActivity.this, "Oops! Something wrong with sending reset email. Please again!", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
-                }
+                Intent loginActivity = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(loginActivity);
+            } else {
+                Toast.makeText(ResetPasswordActivity.this, "Oops! Something wrong with sending reset email. Please again!", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

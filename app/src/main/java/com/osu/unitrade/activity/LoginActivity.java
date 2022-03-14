@@ -22,7 +22,7 @@ import com.osu.unitrade.R;
 
 import java.util.regex.Pattern;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private final String regex = "[a-z]+\\.{1}\\d+@{1}osu.edu";
@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("Lifecycle","------------login activity is on create----------");
+        Log.d("Lifecycle", "------------login activity is on create----------");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -51,45 +51,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editEmailAddress = (EditText) findViewById(R.id.login_editTextEmailAddress);
         editPassword = (EditText) findViewById(R.id.login_editTextPassword);
 
-        editEmailAddress.setText("chen.8095@osu.edu");
-        editPassword.setText("925816");
-
         progressBar = (ProgressBar) findViewById(R.id.login_progressBar);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("Lifecycle","------------login activity is onStart----------");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("Lifecycle","------------login activity is onStop----------");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("Lifecycle","------------login activity is onDestroy----------");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("Lifecycle","------------login activity is onPause----------");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("Lifecycle","------------login activity is onResume----------");
-    }
-
-    @Override
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.login_back:
                 Intent backActivity = new Intent(this, MainActivity.class);
                 backActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -115,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String email = editEmailAddress.getText().toString().trim();
         String password = editPassword.getText().toString().trim();
 
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             editEmailAddress.setError("Enter your email.");
             editEmailAddress.requestFocus();
             return;
@@ -127,19 +94,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             editPassword.setError("Enter your password.");
             editPassword.requestFocus();
             return;
         }
 
-        if(password.length() < 6){
+        if (password.length() < 6) {
             editPassword.setError("The minimum length of the password should be 6 characters.");
             editPassword.requestFocus();
             return;
         }
 
-        if(password.length() > 16){
+        if (password.length() > 16) {
             editPassword.setError("The maximum length of the password should be 16 characters.");
             editPassword.requestFocus();
             return;
@@ -147,30 +114,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         progressBar.setVisibility(View.VISIBLE);
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                    if(user.isEmailVerified()){
-                        Log.d("Success", "signInWithEmailAndPassword:success");
-                        Toast.makeText(LoginActivity.this, "User logged in.", Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.GONE);
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    }else{
-                        Toast.makeText(LoginActivity.this,"Your email hasn't been verified! An email verification has been sent to your email!", Toast.LENGTH_LONG).show();
-                        user.sendEmailVerification();
-                        progressBar.setVisibility(View.GONE);
-                    }
-
-
-
-                }else{
-                    Log.w("Error", "signInWithEmailAndPassword:failure", task.getException());
-                    Toast.makeText(LoginActivity.this, "Invalid email address or password entered to login!",Toast.LENGTH_LONG).show();
+                if (user.isEmailVerified()) {
+                    Log.d("Success", "signInWithEmailAndPassword:success");
+                    Toast.makeText(LoginActivity.this, "User logged in.", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                } else {
+                    Toast.makeText(LoginActivity.this, "Your email hasn't been verified! An email verification has been sent to your email!", Toast.LENGTH_LONG).show();
+                    user.sendEmailVerification();
                     progressBar.setVisibility(View.GONE);
                 }
+            } else {
+                Log.w("Error", "signInWithEmailAndPassword:failure", task.getException());
+                Toast.makeText(LoginActivity.this, "Invalid email address or password entered to login!", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

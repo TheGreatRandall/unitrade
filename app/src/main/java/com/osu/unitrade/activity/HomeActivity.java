@@ -3,9 +3,7 @@ package com.osu.unitrade.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -20,7 +18,7 @@ import com.osu.unitrade.fragment.AddListingFragment;
 import com.osu.unitrade.fragment.MylistingFragment;
 import com.osu.unitrade.R;
 import com.osu.unitrade.fragment.SettingFragment;
-import com.osu.unitrade.entity.User;
+import com.osu.unitrade.model.User;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -35,7 +33,6 @@ public class HomeActivity extends AppCompatActivity {
     private Button myListing;
     private Button setting;
 
-    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,46 +56,35 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HomeActivity.this, "youbing", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "fail to get user", Toast.LENGTH_SHORT).show();
             }
         });
 
-        addListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("nickname", HomeActivity.this.nickname);
-                AddListingFragment fragment = new AddListingFragment();
-                fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-            }
+        addListing.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("nickname", HomeActivity.this.nickname);
+            AddListingFragment fragment = new AddListingFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });
 
         myListing = (Button) findViewById(R.id.myListing);
-        myListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("nickname", HomeActivity.this.nickname);
-                MylistingFragment fragment = new MylistingFragment();
-                fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-            }
+        myListing.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("nickname", HomeActivity.this.nickname);
+            MylistingFragment fragment = new MylistingFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });
 
 
         setting = (Button) findViewById(R.id.setting);
-        setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle bundle = new Bundle();
-                bundle.putString("nickname", HomeActivity.this.nickname);
-                SettingFragment fragment = new SettingFragment();
-                fragment.setArguments(bundle);
-                getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-            }
+        setting.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("nickname", HomeActivity.this.nickname);
+            SettingFragment fragment = new SettingFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });
-
-
     }
 }
