@@ -34,6 +34,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Register");
+
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
