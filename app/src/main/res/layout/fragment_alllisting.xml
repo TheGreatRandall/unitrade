@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.MylistingFragment">
+    tools:context=".fragment.AllListingFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mylistingList"
+        android:id="@+id/alllistingList"
         android:layout_width="match_parent"
         android:layout_height="577dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -27,24 +27,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <EditText
         android:layout_width="247dp"
         android:layout_height="54dp"
-        android:text="My Listings"
+        android:hint="enter title"
         android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/mylistingList"
-        app:layout_constraintEnd_toStartOf="@+id/add_listing_button"
+        app:layout_constraintBottom_toTopOf="@+id/alllistingList"
+        app:layout_constraintEnd_toStartOf="@+id/search_listing_button"
         app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.695" />
 
     <Button
-        android:id="@+id/add_listing_button"
+        android:id="@+id/search_listing_button"
         android:layout_width="106dp"
         android:layout_height="54dp"
-        android:text="Add"
-        app:layout_constraintBottom_toTopOf="@+id/mylistingList"
+        android:text="search"
+        app:layout_constraintBottom_toTopOf="@+id/alllistingList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.947"
         app:layout_constraintStart_toStartOf="parent"

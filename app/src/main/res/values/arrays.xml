@@ -1,0 +1,8 @@
+<resources>
+
+    <string-array name="pref_themes">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+</resources>

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +40,7 @@ public class MylistingFragment extends Fragment {
     ArrayList<Listing> list;
     private String userID;
     private FirebaseUser user;
+    private Button addListingButton;
 
     public MylistingFragment() {
         // Required empty public constructor
@@ -68,7 +70,13 @@ public class MylistingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_mylisting, container, false);
-        recyclerView = root.findViewById(R.id.listingList);
+        addListingButton = root.findViewById(R.id.add_listing_button);
+        addListingButton.setOnClickListener(view -> {
+            AddListingFragment fragment = new AddListingFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        }
+        );
+        recyclerView = root.findViewById(R.id.mylistingList);
         database = FirebaseDatabase.getInstance().getReference("User-Listings/" + userID);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

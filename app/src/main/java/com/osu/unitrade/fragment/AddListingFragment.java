@@ -145,6 +145,8 @@ public class AddListingFragment extends Fragment {
                     description.setText("");
                     key = mDatabase.child("Listings").push().getKey();
                     Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
+                    MylistingFragment fragment = new MylistingFragment();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 } else {
                     Toast.makeText(requireActivity(), "failed", Toast.LENGTH_SHORT).show();
                 }

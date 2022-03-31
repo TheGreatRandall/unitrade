@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.osu.unitrade.fragment.AddListingFragment;
+import com.osu.unitrade.fragment.AllListingFragment;
 import com.osu.unitrade.fragment.MylistingFragment;
 import com.osu.unitrade.R;
 import com.osu.unitrade.fragment.SettingFragment;
@@ -29,7 +30,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private String nickname;
 
-    private Button addListing;
+    private Button allListing;
     private Button myListing;
     private Button setting;
 
@@ -39,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        addListing = (Button) findViewById(R.id.addListing);
+        allListing = (Button) findViewById(R.id.allListing);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -60,10 +61,10 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        addListing.setOnClickListener(view -> {
+        allListing.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString("nickname", HomeActivity.this.nickname);
-            AddListingFragment fragment = new AddListingFragment();
+            AllListingFragment fragment = new AllListingFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });

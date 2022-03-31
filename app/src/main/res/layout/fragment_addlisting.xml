@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="375dp"
         android:layout_height="55dp"
-        android:text="My Listings"
+        android:text="Add Listing"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/AddListingTitle"
         app:layout_constraintEnd_toEndOf="parent"
