@@ -133,7 +133,7 @@ public class AddListingFragment extends Fragment {
                 key = mDatabase.child("Listings").push().getKey();
             }
 
-            Listing listing = new Listing(userID, title.getText().toString(), description.getText().toString());
+            Listing listing = new Listing(userID, title.getText().toString(), description.getText().toString(),"longitude","latitude");
             Map<String, Object> listingValues = listing.toMap();
             Map<String, Object> childUpdates = new HashMap<>();
             childUpdates.put("/Listings/" + key, listingValues);

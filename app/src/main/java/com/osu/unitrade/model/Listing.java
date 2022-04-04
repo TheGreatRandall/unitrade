@@ -12,14 +12,18 @@ public class Listing {
     public String uid;
     public String title;
     public String description;
+    public String longitude;
+    public String latitude;
 
     public Listing() {
     }
 
-    public Listing(String uid, String title, String description) {
+    public Listing(String uid, String title, String description, String longitude, String latitude) {
         this.uid = uid;
         this.title = title;
         this.description = description;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
     @Exclude
@@ -28,6 +32,8 @@ public class Listing {
         result.put("uid", uid);
         result.put("title", title);
         result.put("description", description);
+        result.put("longitude", longitude);
+        result.put("latitude", latitude);
         return result;
     }
 
@@ -42,6 +48,22 @@ public class Listing {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public void setTitle(String title) {
