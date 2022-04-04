@@ -88,5 +88,8 @@ public class HomeActivity extends AppCompatActivity {
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });
+
+        AllListingFragment fragment = new AllListingFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 }

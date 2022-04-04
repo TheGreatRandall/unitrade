@@ -106,9 +106,9 @@ public class AddListingFragment extends Fragment {
                 User userProfile = snapshot.getValue(User.class);
                 if (userProfile != null) {
                     nickname = userProfile.nickname;
+                    email = userProfile.emailAddress;
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(requireActivity(), "fail to get user", Toast.LENGTH_SHORT).show();
@@ -150,6 +150,7 @@ public class AddListingFragment extends Fragment {
                     if (listing != null) {
                         title.setText(listing.getTitle());
                         description.setText(listing.getDescription());
+
                     }
 
                 }

@@ -14,12 +14,16 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,8 +32,19 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.osu.unitrade.R;
+import com.osu.unitrade.adapter.AllListingAdapter;
+import com.osu.unitrade.adapter.ListingAdapter;
+import com.osu.unitrade.model.Listing;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,10 +55,10 @@ import java.util.List;
 public class AllListingFragment extends Fragment {
 
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private Button searchButton;
+    RecyclerView recyclerView;
+    DatabaseReference database;
+    AllListingAdapter listingAdapter;
+    ArrayList<Listing> list;
 
     public AllListingFragment() {
         // Required empty public constructor
@@ -71,11 +86,47 @@ public class AllListingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_alllisting, container, false);
+        View root = inflater.inflate(R.layout.fragment_alllisting, container, false);
 
-        searchButton = (Button) rootView.findViewById(R.id.search_listing_button);
 
-        return rootView;
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//            getCurrentLocation();
+        } else {
+            locationPermissionRequest.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION});
+        }
+
+        recyclerView = root.findViewById(R.id.alllistingList);
+        database = FirebaseDatabase.getInstance().getReference("Listings");
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        list = new ArrayList<>();
+        listingAdapter = new AllListingAdapter(requireContext(), list);
+        recyclerView.setAdapter(listingAdapter);
+
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Listing listing = dataSnapshot.getValue(Listing.class);
+                    list.add(listing);
+                }
+                listingAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        return root;
     }
 
 

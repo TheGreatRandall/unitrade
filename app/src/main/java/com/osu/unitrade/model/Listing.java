@@ -9,7 +9,8 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class Listing {
 
-    public String uid;
+    public String nickname;
+    public String email;
     public String title;
     public String description;
     public String longitude;
@@ -18,36 +19,21 @@ public class Listing {
     public Listing() {
     }
 
-    public Listing(String uid, String title, String description, String longitude, String latitude) {
-        this.uid = uid;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Listing(String nickname, String email, String title, String description, String longitude, String latitude) {
+        this.nickname = nickname;
+        this.email = email;
         this.title = title;
         this.description = description;
         this.longitude = longitude;
         this.latitude = latitude;
-    }
-
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", uid);
-        result.put("title", title);
-        result.put("description", description);
-        result.put("longitude", longitude);
-        result.put("latitude", latitude);
-        return result;
-    }
-
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public String getLongitude() {
@@ -65,6 +51,33 @@ public class Listing {
     public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("nickname", nickname);
+        result.put("email", email);
+        result.put("title", title);
+        result.put("description", description);
+        result.put("longitude", longitude);
+        result.put("latitude", latitude);
+        return result;
+    }
+
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+
 
     public void setTitle(String title) {
         this.title = title;

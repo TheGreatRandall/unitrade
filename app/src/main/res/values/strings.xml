@@ -17,4 +17,5 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="key_username">key_username</string>
+    <string name="key_email">key_email</string>
 </resources>
