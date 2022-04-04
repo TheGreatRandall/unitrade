@@ -1,10 +1,19 @@
 package com.osu.unitrade.fragment;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +23,14 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,12 +58,17 @@ public class AddListingFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
+    private int test = 0;
+
     private FirebaseUser user;
     private String userID, listID;
     private String key, nickname;
+    private String currentLongitude, currentLatitude;
+    private Location currentLocation;
 
     private ProgressBar progressBar;
 
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     public AddListingFragment() {
         // Required empty public constructor
@@ -92,6 +114,19 @@ public class AddListingFragment extends Fragment {
                 Toast.makeText(requireActivity(), "fail to get user", Toast.LENGTH_SHORT).show();
             }
         });
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation();
+        }else{
+            locationPermissionRequest.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION});
+        }
     }
 
     @Override
@@ -133,7 +168,9 @@ public class AddListingFragment extends Fragment {
                 key = mDatabase.child("Listings").push().getKey();
             }
 
-            Listing listing = new Listing(userID, title.getText().toString(), description.getText().toString(),"longitude","latitude");
+            getCurrentLocation();
+
+            Listing listing = new Listing(userID, title.getText().toString(), description.getText().toString(), currentLongitude, currentLatitude);
             Map<String, Object> listingValues = listing.toMap();
             Map<String, Object> childUpdates = new HashMap<>();
             childUpdates.put("/Listings/" + key, listingValues);
@@ -154,4 +191,77 @@ public class AddListingFragment extends Fragment {
         });
         return rootView;
     }
+    
+
+    private void getCurrentLocation() {
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
+
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                locationPermissionRequest.launch(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION});
+            }
+
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    currentLocation = task.getResult();
+
+                    if (currentLocation != null) {
+                        currentLongitude = String.valueOf(currentLocation.getLongitude());
+                        currentLatitude = String.valueOf(currentLocation.getLatitude());
+                        Toast.makeText(requireActivity(),"get location success", Toast.LENGTH_SHORT).show();
+                    } else {
+                        LocationRequest locationRequest = LocationRequest.
+                                create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(10000).setFastestInterval(1000).setNumUpdates(1);
+
+                        LocationCallback locationCallback = new LocationCallback() {
+                            @Override
+                            public void onLocationResult(@NonNull LocationResult locationResult) {
+                                super.onLocationResult(locationResult);
+
+                                currentLocation = locationResult.getLastLocation();
+
+                                currentLongitude = String.valueOf(currentLocation.getLongitude());
+                                currentLatitude = String.valueOf(currentLocation.getLatitude());
+
+                                test = 1;
+                            }
+                        };
+
+
+                       /* if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            locationPermissionRequest.launch(new String[]{
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.ACCESS_COARSE_LOCATION});
+                        }
+                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());*/
+
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    ActivityResultLauncher<String[]> locationPermissionRequest =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result ->{
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    Boolean fineLocationGranted = result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
+                    Boolean coarseLocationGranted = result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
+
+                    if(fineLocationGranted != null && fineLocationGranted){
+                        Toast.makeText(getActivity(), "Precise location access granted", Toast.LENGTH_SHORT).show();
+                    }else if(coarseLocationGranted != null && coarseLocationGranted){
+                        Toast.makeText(getActivity(), "Precise location access granted", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(), "Precise location access granted", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            });
 }

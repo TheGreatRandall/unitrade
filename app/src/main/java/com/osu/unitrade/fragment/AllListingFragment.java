@@ -45,8 +45,6 @@ public class AllListingFragment extends Fragment {
     private String mParam2;
     private Button searchButton;
 
-    FusedLocationProviderClient fusedLocationProviderClient;
-
     public AllListingFragment() {
         // Required empty public constructor
     }
@@ -77,83 +75,9 @@ public class AllListingFragment extends Fragment {
 
         searchButton = (Button) rootView.findViewById(R.id.search_listing_button);
 
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            getCurrentLocation();
-        } else {
-            locationPermissionRequest.launch(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION});
-        }
-
         return rootView;
     }
 
-    private void getCurrentLocation() {
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(locationManager.NETWORK_PROVIDER)) {
 
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                locationPermissionRequest.launch(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION});
-            }
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-
-                    if (location != null) {
-                    } else {
-                        LocationRequest locationRequest = LocationRequest.
-                                create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                                .setInterval(10000).setFastestInterval(1000).setNumUpdates(1);
-
-                        LocationCallback locationCallback = new LocationCallback() {
-                            @Override
-                            public void onLocationResult(@NonNull LocationResult locationResult) {
-                                super.onLocationResult(locationResult);
-
-                                Location current = locationResult.getLastLocation();
-
-                            }
-                        };
-
-
-                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            locationPermissionRequest.launch(new String[]{
-                                    Manifest.permission.ACCESS_FINE_LOCATION,
-                                    Manifest.permission.ACCESS_COARSE_LOCATION});
-                        }
-                        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-
-
-                    }
-                }
-            });
-        }
-
-
-    }
-
-    ActivityResultLauncher<String[]> locationPermissionRequest =
-            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result ->{
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    Boolean fineLocationGranted = result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
-                    Boolean coarseLocationGranted = result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
-
-                    if(fineLocationGranted != null && fineLocationGranted){
-                        Toast.makeText(getActivity(), "Precise location access granted", Toast.LENGTH_SHORT).show();
-                    }else if(coarseLocationGranted != null && coarseLocationGranted){
-                        Toast.makeText(getActivity(), "Precise location access granted", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getActivity(), "Precise location access granted", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            });
 
 }
