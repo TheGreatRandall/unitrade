@@ -28,22 +28,23 @@ public class NewSettingsFragment extends PreferenceFragmentCompat {
     private DatabaseReference reference;
     private String userID;
 
-    private String nickname;
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
         user = FirebaseAuth.getInstance().getCurrentUser();
         reference = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
-        Preference username = (Preference) getPreferenceManager().findPreference(getString(R.string.key_username));
+        Preference nickname = (Preference) getPreferenceManager().findPreference(getString(R.string.key_username));
+        Preference email = (Preference) getPreferenceManager().findPreference(getString(R.string.key_email));
+
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User userProfile = snapshot.getValue(User.class);
                 if (userProfile != null) {
-                    nickname = userProfile.nickname;
-                    username.setSummary(nickname);
+                    nickname.setSummary(userProfile.nickname);
+                    email.setSummary(userProfile.emailAddress);
+
                 }
             }
 

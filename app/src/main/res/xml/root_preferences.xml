@@ -4,8 +4,13 @@
 
         <Preference
             app:key="@string/key_username"
-            app:summary=""
+            app:summary="temp"
             app:title="Username" />
+
+        <Preference
+            app:key="@string/key_email"
+            app:summary="temp"
+            app:title="Email" />
 
     </PreferenceCategory>
 
