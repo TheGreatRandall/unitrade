@@ -167,7 +167,11 @@ public class AddListingFragment extends Fragment {
                     description.setText("");
                     key = mDatabase.child("Listings").push().getKey();
                     Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("currentLongitude", currentLongitude);
+                    bundle.putDouble("currentLatitude", currentLatitude);
                     MylistingFragment fragment = new MylistingFragment();
+                    fragment.setArguments(bundle);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 } else {
                     Toast.makeText(requireActivity(), "failed", Toast.LENGTH_SHORT).show();

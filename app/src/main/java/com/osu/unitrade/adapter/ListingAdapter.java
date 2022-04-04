@@ -31,14 +31,17 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
     ArrayList<String> idList;
     ArrayList<Listing> list;
     DatabaseReference database;
+    double currentLongitude, currentLatitude;
 
     private String userID;
     private FirebaseUser user;
 
-    public ListingAdapter(Context context, ArrayList<String> idList, ArrayList<Listing> list) {
+    public ListingAdapter(Context context, ArrayList<String> idList, ArrayList<Listing> list, double currentLongitude, double currentLatitude) {
         this.context = context;
         this.idList = idList;
         this.list = list;
+        this.currentLatitude = currentLatitude;
+        this.currentLongitude = currentLongitude;
     }
 
     @NonNull
@@ -58,7 +61,6 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
         holder.lastName.setText(listing.getDescription());
         holder.list = listing;
         holder.listID = listId;
-
     }
 
     @Override
@@ -90,6 +92,8 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.MyViewHo
             update.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
                 bundle.putString("listID", listID);
+                bundle.putDouble("currentLongitude", currentLongitude);
+                bundle.putDouble("currentLatitude", currentLatitude);
                 AddListingFragment fragment = new AddListingFragment();
                 fragment.setArguments(bundle);
                 ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();

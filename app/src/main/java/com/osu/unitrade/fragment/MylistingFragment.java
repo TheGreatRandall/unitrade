@@ -97,7 +97,7 @@ public class MylistingFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         list = new ArrayList<>();
         listingIdList = new ArrayList<>();
-        listingAdapter = new ListingAdapter(requireContext(), listingIdList, list);
+        listingAdapter = new ListingAdapter(requireContext(), listingIdList, list, currentLongitude, currentLatitude);
         recyclerView.setAdapter(listingAdapter);
 
         database.addValueEventListener(new ValueEventListener() {
