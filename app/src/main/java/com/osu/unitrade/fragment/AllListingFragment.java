@@ -88,24 +88,12 @@ public class AllListingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_alllisting, container, false);
 
-
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            getCurrentLocation();
-        } else {
-            locationPermissionRequest.launch(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION});
-        }
-
         recyclerView = root.findViewById(R.id.alllistingList);
         database = FirebaseDatabase.getInstance().getReference("Listings");
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         list = new ArrayList<>();
-        listingAdapter = new AllListingAdapter(requireContext(), list);
+        listingAdapter = new AllListingAdapter(getActivity(), requireContext(), list);
         recyclerView.setAdapter(listingAdapter);
 
         database.addValueEventListener(new ValueEventListener() {

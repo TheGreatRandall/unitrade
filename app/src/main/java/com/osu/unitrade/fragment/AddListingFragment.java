@@ -58,11 +58,9 @@ public class AddListingFragment extends Fragment {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 
-    private int test = 0;
-
     private FirebaseUser user;
     private String userID, listID;
-    private String key, nickname;
+    private String key, nickname, email;
     private String currentLongitude, currentLatitude;
     private Location currentLocation;
 
@@ -127,6 +125,8 @@ public class AddListingFragment extends Fragment {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION});
         }
+
+
     }
 
     @Override
@@ -170,8 +170,7 @@ public class AddListingFragment extends Fragment {
             }
 
             getCurrentLocation();
-
-            Listing listing = new Listing(userID, title.getText().toString(), description.getText().toString(), currentLongitude, currentLatitude);
+            Listing listing = new Listing(nickname, email, title.getText().toString(), description.getText().toString(), currentLongitude, currentLatitude);
             Map<String, Object> listingValues = listing.toMap();
             Map<String, Object> childUpdates = new HashMap<>();
             childUpdates.put("/Listings/" + key, listingValues);
@@ -229,12 +228,11 @@ public class AddListingFragment extends Fragment {
                                 currentLongitude = String.valueOf(currentLocation.getLongitude());
                                 currentLatitude = String.valueOf(currentLocation.getLatitude());
 
-                                test = 1;
                             }
                         };
 
 
-                       /* if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+/*                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                             locationPermissionRequest.launch(new String[]{
                                     Manifest.permission.ACCESS_FINE_LOCATION,
                                     Manifest.permission.ACCESS_COARSE_LOCATION});

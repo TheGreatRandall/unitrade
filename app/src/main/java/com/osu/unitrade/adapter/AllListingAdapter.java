@@ -1,6 +1,9 @@
 package com.osu.unitrade.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +21,17 @@ import com.osu.unitrade.R;
 import com.osu.unitrade.model.Listing;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AllListingAdapter extends RecyclerView.Adapter<AllListingAdapter.MyViewHolder> {
 
+    Activity currentActivity;
     Context context;
     ArrayList<Listing> list;
 
 
-    public AllListingAdapter(Context context, ArrayList<Listing> list) {
+    public AllListingAdapter(Activity current, Context context, ArrayList<Listing> list) {
+        this.currentActivity = current;
         this.context = context;
         this.list = list;
     }
@@ -44,7 +50,15 @@ public class AllListingAdapter extends RecyclerView.Adapter<AllListingAdapter.My
         holder.nickname.setText(listing.getNickname());
         holder.email.setText(listing.getEmail());
         holder.description.setText(listing.getDescription());
-        holder.location.setText(listing.getLatitude() + listing.getLongitude());
+
+        Geocoder geocoder = new Geocoder(currentActivity);
+        try{
+            List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(listing.getLatitude()), Double.parseDouble(listing.getLongitude()), 1);
+            holder.location.setText(addresses.get(0).getAddressLine(0));
+        }catch (Exception E){
+            holder.location.setText("Unable to get this listing's location");
+        }
+
     }
 
     @Override
