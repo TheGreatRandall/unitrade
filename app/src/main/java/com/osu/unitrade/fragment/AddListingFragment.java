@@ -70,7 +70,6 @@ public class AddListingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Bundle bundle = getArguments();
         if (bundle != null) {
             listID = bundle.getString("listID");

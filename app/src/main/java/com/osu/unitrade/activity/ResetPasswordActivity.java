@@ -30,6 +30,8 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Forget Password");
+
         setContentView(R.layout.activity_reset_password);
 
         mauth = FirebaseAuth.getInstance();

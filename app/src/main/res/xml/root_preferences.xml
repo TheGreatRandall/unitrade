@@ -2,39 +2,17 @@
 
     <PreferenceCategory app:title="User">
 
-        <EditTextPreference
-            app:key="signature"
-            app:title="Username"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="Display">
-
-        <ListPreference
-            app:defaultValue="3"
-            app:dialogTitle="Choose a theme"
-            app:entries="@array/pref_themes"
-            app:entryValues="@array/pref_themes"
-            app:key="@string/key_theme"
-            app:summary="@string/key_theme"
-            app:title="Change Theme" />
+        <Preference
+            app:key="@string/key_username"
+            app:summary=""
+            app:title="Username" />
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Account">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
+        <Preference
+            app:key="logoutButton"
+            app:title="Logout" />
     </PreferenceCategory>
 
 </PreferenceScreen>

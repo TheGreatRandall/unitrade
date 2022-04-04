@@ -18,6 +18,7 @@ import com.osu.unitrade.fragment.AddListingFragment;
 import com.osu.unitrade.fragment.AllListingFragment;
 import com.osu.unitrade.fragment.MylistingFragment;
 import com.osu.unitrade.R;
+import com.osu.unitrade.fragment.NewSettingsFragment;
 import com.osu.unitrade.fragment.SettingFragment;
 import com.osu.unitrade.model.User;
 
@@ -39,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        getSupportActionBar().setTitle("Unitrade");
         allListing = (Button) findViewById(R.id.allListing);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -83,7 +84,7 @@ public class HomeActivity extends AppCompatActivity {
         setting.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString("nickname", HomeActivity.this.nickname);
-            SettingFragment fragment = new SettingFragment();
+            NewSettingsFragment fragment = new NewSettingsFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });
