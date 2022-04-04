@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,8 +40,10 @@ public class MylistingFragment extends Fragment {
     ArrayList<String> listingIdList;
     ArrayList<Listing> list;
     private String userID;
+    private Double currentLongitude, currentLatitude;
     private FirebaseUser user;
     private Button addListingButton;
+
 
     public MylistingFragment() {
         // Required empty public constructor
@@ -52,9 +55,11 @@ public class MylistingFragment extends Fragment {
      *
      * @return A new instance of fragment MylistingFragment.
      */
-    public static MylistingFragment newInstance() {
+    public static MylistingFragment newInstance(Double currentLongitude, Double currentLatitude) {
         MylistingFragment fragment = new MylistingFragment();
         Bundle args = new Bundle();
+        args.putDouble("currentLongitude", currentLongitude);
+        args.putDouble("currentLatitude", currentLatitude);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +67,12 @@ public class MylistingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            currentLatitude = bundle.getDouble("currentLatitude");
+            currentLongitude = bundle.getDouble("currentLongitude");
+        }
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
     }
@@ -72,7 +83,11 @@ public class MylistingFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_mylisting, container, false);
         addListingButton = root.findViewById(R.id.add_listing_button);
         addListingButton.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putDouble("currentLongitude", currentLongitude);
+            bundle.putDouble("currentLatitude", currentLatitude);
             AddListingFragment fragment = new AddListingFragment();
+            fragment.setArguments(bundle);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         }
         );
