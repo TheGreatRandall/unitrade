@@ -1,39 +1,20 @@
 package com.osu.unitrade.fragment;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Looper;
+import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,11 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.osu.unitrade.R;
 import com.osu.unitrade.adapter.AllListingAdapter;
-import com.osu.unitrade.adapter.ListingAdapter;
 import com.osu.unitrade.model.Listing;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +38,10 @@ public class AllListingFragment extends Fragment {
     DatabaseReference database;
     AllListingAdapter listingAdapter;
     ArrayList<Listing> list;
+
+    boolean isLoading = false;
+    private String oldestPostId;
+    private int recyclerVisiblePosition;
 
     public AllListingFragment() {
         // Required empty public constructor
@@ -96,11 +79,12 @@ public class AllListingFragment extends Fragment {
         listingAdapter = new AllListingAdapter(getActivity(), requireContext(), list);
         recyclerView.setAdapter(listingAdapter);
 
-        database.addValueEventListener(new ValueEventListener() {
+        database.limitToFirst(5).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    oldestPostId = dataSnapshot.getKey();
                     Listing listing = dataSnapshot.getValue(Listing.class);
                     list.add(listing);
                 }
@@ -113,10 +97,65 @@ public class AllListingFragment extends Fragment {
             }
         });
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+                if(!isLoading){
+                    if(linearLayoutManager != null &&
+                    linearLayoutManager.findLastCompletelyVisibleItemPosition() == list.size() - 1){
+                        list.add(null);
+                        listingAdapter.notifyItemInserted(list.size() - 1);
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                list.remove(list.size() - 1);
+                                int scrollPosition = list.size();
+                                listingAdapter.notifyItemRemoved(scrollPosition);
+                                int currentSize = scrollPosition;
+                                int nextLimit = currentSize + 5;
+
+                                while(currentSize  < nextLimit){
+                                    Log.d("loadMore", "I load a new list once");
+                                    database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                                oldestPostId = dataSnapshot.getKey();
+                                                Listing listing = dataSnapshot.getValue(Listing.class);
+                                                list.add(listing);
+                                            }
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+                                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                    currentSize += 5;
+                                }
+                                isLoading = false;
+                            }
+                        }, 2000);
+                        isLoading = true;
+                    }
+                }
+            }
+        });
 
         return root;
     }
-
-
 
 }

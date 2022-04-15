@@ -1,6 +1,5 @@
 package com.osu.unitrade.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,9 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.osu.unitrade.R;
@@ -50,7 +46,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgetPassword.setOnClickListener(this);
 
         editEmailAddress = (EditText) findViewById(R.id.login_editTextEmailAddress);
+        editEmailAddress.setText("chen.8095@osu.edu");
         editPassword = (EditText) findViewById(R.id.login_editTextPassword);
+        editPassword.setText("123456");
 
         progressBar = (ProgressBar) findViewById(R.id.login_progressBar);
     }
