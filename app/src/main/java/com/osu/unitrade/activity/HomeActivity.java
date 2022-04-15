@@ -219,6 +219,8 @@ public class HomeActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 
+
+
     private void updateGPS() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);

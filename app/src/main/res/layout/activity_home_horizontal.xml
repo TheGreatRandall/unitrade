@@ -8,8 +8,8 @@
 
     <Button
         android:id="@+id/allListing"
-        android:layout_width="292dp"
-        android:layout_height="94dp"
+        android:layout_width="272dp"
+        android:layout_height="79dp"
         android:text="All listing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +20,8 @@
 
     <Button
         android:id="@+id/myListing"
-        android:layout_width="292dp"
-        android:layout_height="94dp"
+        android:layout_width="272dp"
+        android:layout_height="79dp"
         android:text="my listing"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,8 +32,8 @@
 
     <Button
         android:id="@+id/setting"
-        android:layout_width="292dp"
-        android:layout_height="94dp"
+        android:layout_width="272dp"
+        android:layout_height="79dp"
         android:text="setting"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
