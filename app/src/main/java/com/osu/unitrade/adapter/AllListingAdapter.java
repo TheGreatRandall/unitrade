@@ -19,10 +19,7 @@ import com.osu.unitrade.model.Listing;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private final int VIEW_TYPE_ITEM = 0;
-    private final int VIEW_TYPE_LOADING = 1;
+public class AllListingAdapter extends RecyclerView.Adapter<AllListingAdapter.MyViewHolder> {
 
     Activity currentActivity;
     Context context;
@@ -37,35 +34,33 @@ public class AllListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if(viewType == VIEW_TYPE_ITEM){
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(context).inflate(R.layout.all_item, parent, false);
             return new MyViewHolder(v);
-        }else{
-            View v = LayoutInflater.from(context).inflate(R.layout.all_item_loading, parent, false);
-            return new LoadingViewHolder(v);
-        }
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof MyViewHolder){
-            populateItemRows((MyViewHolder) holder, position);
-        } else if( holder instanceof LoadingViewHolder){
-            showLoadingView((LoadingViewHolder) holder, position);
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        Listing listing = list.get(position);
+        holder.title.setText(listing.getTitle());
+        holder.nickname.setText(listing.getNickname());
+        holder.email.setText(listing.getEmail());
+        holder.description.setText(listing.getDescription());
+
+        Geocoder geocoder = new Geocoder(currentActivity);
+        try{
+            List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(listing.getLatitude()), Double.parseDouble(listing.getLongitude()), 1);
+            holder.location.setText(addresses.get(0).getAddressLine(0));
+        }catch (Exception E){
+            holder.location.setText("Unable to get this listing's location");
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return list == null? 0 : list.size();
-    }
-
-    @Override
-    public int getItemViewType(int position){
-        return list.get(position) == null? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return list.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -81,37 +76,4 @@ public class AllListingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             email = itemView.findViewById(R.id.listingEmail);
         }
     }
-
-    public class LoadingViewHolder extends  RecyclerView.ViewHolder{
-
-        ProgressBar progressBar;
-
-        public  LoadingViewHolder(@NonNull View itemView){
-            super(itemView);
-            progressBar = itemView.findViewById(R.id.loading_progress_bar);
-        }
-    }
-
-    public void showLoadingView(LoadingViewHolder holder, int position){
-
-    }
-
-    public void populateItemRows(MyViewHolder holder, int position){
-        Listing listing = list.get(position);
-        holder.title.setText(listing.getTitle());
-        holder.nickname.setText(listing.getNickname());
-        holder.email.setText(listing.getEmail());
-        holder.description.setText(listing.getDescription());
-
-        Geocoder geocoder = new Geocoder(currentActivity);
-        try{
-            List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(listing.getLatitude()), Double.parseDouble(listing.getLongitude()), 1);
-            holder.location.setText(addresses.get(0).getAddressLine(0));
-        }catch (Exception E){
-            holder.location.setText("Unable to get this listing's location");
-        }
-    }
-
-
-
 }

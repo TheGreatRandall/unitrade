@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -33,15 +34,15 @@ import java.util.ArrayList;
  */
 public class AllListingFragment extends Fragment {
 
-
+    ProgressBar progressBar;
     RecyclerView recyclerView;
     DatabaseReference database;
     AllListingAdapter listingAdapter;
     ArrayList<Listing> list;
 
-    boolean isLoading = false;
     private String oldestPostId;
-    private int recyclerVisiblePosition;
+    private int visiableThread = 1;
+    private int lastVisibleItem, totalItemCount;
 
     public AllListingFragment() {
         // Required empty public constructor
@@ -71,6 +72,7 @@ public class AllListingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_alllisting, container, false);
 
+        progressBar = root.findViewById(R.id.loading_progressBar);
         recyclerView = root.findViewById(R.id.alllistingList);
         database = FirebaseDatabase.getInstance().getReference("Listings");
         recyclerView.setHasFixedSize(true);
@@ -108,49 +110,33 @@ public class AllListingFragment extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                progressBar.setVisibility(View.GONE);
                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
-                if(!isLoading){
-                    if(linearLayoutManager != null &&
-                    linearLayoutManager.findLastCompletelyVisibleItemPosition() == list.size() - 1){
-                        list.add(null);
-                        listingAdapter.notifyItemInserted(list.size() - 1);
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                list.remove(list.size() - 1);
-                                int scrollPosition = list.size();
-                                listingAdapter.notifyItemRemoved(scrollPosition);
-                                int currentSize = scrollPosition;
-                                int nextLimit = currentSize + 5;
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-                                while(currentSize  < nextLimit){
-                                    Log.d("loadMore", "I load a new list once");
-                                    database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                                                oldestPostId = dataSnapshot.getKey();
-                                                Listing listing = dataSnapshot.getValue(Listing.class);
-                                                list.add(listing);
-                                            }
+                if (totalItemCount <= (lastVisibleItem + visiableThread)) {
 
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-
-                                    currentSize += 5;
-                                }
-                                isLoading = false;
+                    progressBar.setVisibility(View.VISIBLE);
+                    database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                oldestPostId = dataSnapshot.getKey();
+                                Listing listing = dataSnapshot.getValue(Listing.class);
+                                list.add(listing);
                             }
-                        }, 2000);
-                        isLoading = true;
-                    }
+                            listingAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
