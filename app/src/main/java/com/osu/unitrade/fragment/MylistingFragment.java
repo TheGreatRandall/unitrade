@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class MylistingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        if(bundle != null){
+        if (bundle != null) {
             currentLatitude = bundle.getDouble("currentLatitude");
             currentLongitude = bundle.getDouble("currentLongitude");
         }
@@ -83,13 +84,13 @@ public class MylistingFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_mylisting, container, false);
         addListingButton = root.findViewById(R.id.add_listing_button);
         addListingButton.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            bundle.putDouble("currentLongitude", currentLongitude);
-            bundle.putDouble("currentLatitude", currentLatitude);
-            AddListingFragment fragment = new AddListingFragment();
-            fragment.setArguments(bundle);
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-        }
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("currentLongitude", currentLongitude);
+                    bundle.putDouble("currentLatitude", currentLatitude);
+                    AddListingFragment fragment = new AddListingFragment();
+                    fragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                }
         );
         recyclerView = root.findViewById(R.id.mylistingList);
         database = FirebaseDatabase.getInstance().getReference("User-Listings/" + userID);
@@ -100,25 +101,43 @@ public class MylistingFragment extends Fragment {
         listingAdapter = new ListingAdapter(requireContext(), listingIdList, list, currentLongitude, currentLatitude);
         recyclerView.setAdapter(listingAdapter);
 
-        database.addValueEventListener(new ValueEventListener() {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                listingIdList.clear();
-                list.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String listingID = dataSnapshot.getKey();
-                    Listing listing = dataSnapshot.getValue(Listing.class);
-                    listingIdList.add(listingID);
-                    list.add(listing);
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    database.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            listingIdList.clear();
+                            list.clear();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                String listingID = dataSnapshot.getKey();
+                                Listing listing = dataSnapshot.getValue(Listing.class);
+                                listingIdList.add(listingID);
+                                list.add(listing);
+                            }
+                            listingAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
                 }
-                listingAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                Log.w("cancel", "Listener was cancelled");
             }
         });
+
 
         return root;
     }

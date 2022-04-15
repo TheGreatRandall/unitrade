@@ -81,23 +81,41 @@ public class AllListingFragment extends Fragment {
         listingAdapter = new AllListingAdapter(getActivity(), requireContext(), list);
         recyclerView.setAdapter(listingAdapter);
 
-        database.limitToFirst(5).addValueEventListener(new ValueEventListener() {
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    oldestPostId = dataSnapshot.getKey();
-                    Listing listing = dataSnapshot.getValue(Listing.class);
-                    list.add(listing);
+                boolean connected = snapshot.getValue(Boolean.class);
+                if(connected){
+                    database.limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            list.clear();
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                oldestPostId = dataSnapshot.getKey();
+                                Listing listing = dataSnapshot.getValue(Listing.class);
+                                list.add(listing);
+                            }
+                            listingAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else{
+                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
                 }
-                listingAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                Log.w("cancel", "Listener was cancelled");
             }
         });
+
+
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -117,22 +135,38 @@ public class AllListingFragment extends Fragment {
                 lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
 
                 if (totalItemCount <= (lastVisibleItem + visiableThread)) {
-
                     progressBar.setVisibility(View.VISIBLE);
-                    database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+
+                    DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+                    connectedRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                oldestPostId = dataSnapshot.getKey();
-                                Listing listing = dataSnapshot.getValue(Listing.class);
-                                list.add(listing);
+                            boolean connected = snapshot.getValue(Boolean.class);
+                            if(connected){
+                                database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            oldestPostId = dataSnapshot.getKey();
+                                            Listing listing = dataSnapshot.getValue(Listing.class);
+                                            list.add(listing);
+                                        }
+                                        listingAdapter.notifyDataSetChanged();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }else{
+                                Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
                             }
-                            listingAdapter.notifyDataSetChanged();
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                            Log.w("cancel", "Listener was cancelled");
                         }
                     });
 
