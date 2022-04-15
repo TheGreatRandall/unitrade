@@ -1,5 +1,6 @@
 package com.osu.unitrade.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -70,7 +71,13 @@ public class AllListingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_alllisting, container, false);
+        View root = null;
+
+        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            root = inflater.inflate(R.layout.fragment_alllisting, container, false);
+        }else if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            root = inflater.inflate(R.layout.fragment_alllisting_horizontal, container, false);
+        }
 
         progressBar = root.findViewById(R.id.loading_progressBar);
         recyclerView = root.findViewById(R.id.alllistingList);

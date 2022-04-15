@@ -6,6 +6,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,7 +55,13 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_home);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_home_horizontal);
+        }
+
         getSupportActionBar().setTitle("Unitrade");
         allListing = (Button) findViewById(R.id.allListing);
 
@@ -144,6 +151,72 @@ public class HomeActivity extends AppCompatActivity {
                     finish();
                 }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_home);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_home_horizontal);
+        }
+
+        getSupportActionBar().setTitle("Unitrade");
+        allListing = (Button) findViewById(R.id.allListing);
+
+        updateGPS();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        reference = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User userProfile = snapshot.getValue(User.class);
+                if (userProfile != null) {
+                    String nick = userProfile.nickname;
+                    HomeActivity.this.nickname = nick;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(HomeActivity.this, "fail to get user", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        allListing.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("nickname", HomeActivity.this.nickname);
+            AllListingFragment fragment = new AllListingFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        });
+
+        myListing = (Button) findViewById(R.id.myListing);
+        myListing.setOnClickListener(view -> {
+            startLocationUpdates();
+            Bundle bundle = new Bundle();
+            bundle.putDouble("currentLongitude", currentLocation.getLongitude());
+            bundle.putDouble("currentLatitude", currentLocation.getLatitude());
+            MylistingFragment fragment = new MylistingFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        });
+
+
+        setting = (Button) findViewById(R.id.setting);
+        setting.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("nickname", HomeActivity.this.nickname);
+            NewSettingsFragment fragment = new NewSettingsFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        });
+
+        AllListingFragment fragment = new AllListingFragment();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
     }
 
     private void updateGPS() {

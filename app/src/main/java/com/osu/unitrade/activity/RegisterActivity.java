@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +37,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("Register");
 
-        setContentView(R.layout.activity_register);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_register);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_register_horizontal);
+        }
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -71,6 +76,32 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(loginActivity);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_register);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_register_horizontal);
+        }
+
+        mAuth = FirebaseAuth.getInstance();
+
+        back = (Button) findViewById(R.id.register_back);
+        back.setOnClickListener(this);
+        registerSubmit = (Button) findViewById(R.id.registerSubmit);
+        registerSubmit.setOnClickListener(this);
+        signIn = (TextView) findViewById(R.id.register_SignIn);
+        signIn.setOnClickListener(this);
+
+        editNickname = (EditText) findViewById(R.id.register_editTextNickname);
+        editEmailAddress = (EditText) findViewById(R.id.register_editTextEmailAddress);
+        editPassword = (EditText) findViewById(R.id.register_editTextPassword);
+
+        progressBar = (ProgressBar) findViewById(R.id.register_progressBar);
     }
 
     private void submit() {

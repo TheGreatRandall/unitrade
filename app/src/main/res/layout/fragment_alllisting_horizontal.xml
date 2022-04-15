@@ -14,12 +14,12 @@
         android:text="All Listings"
         android:textSize="30dp"
 
-        app:layout_constraintBottom_toTopOf="@+id/alllistingList"
+        app:layout_constraintBottom_toBottomOf="@+id/alllistingList"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.417" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ProgressBar
         android:id="@+id/loading_progressBar"
@@ -33,13 +33,14 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alllistingList"
-        android:layout_width="match_parent"
-        android:layout_height="577dp"
+        android:layout_width="871dp"
+        android:layout_height="281dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
     </androidx.recyclerview.widget.RecyclerView>
 

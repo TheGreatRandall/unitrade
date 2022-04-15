@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,7 +33,12 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("Forget Password");
 
-        setContentView(R.layout.activity_reset_password);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_reset_password);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_reset_password_horizontal);
+        }
+
 
         mauth = FirebaseAuth.getInstance();
 
@@ -91,5 +97,27 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_reset_password);
+        }else if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_reset_password_horizontal);
+        }
+
+        mauth = FirebaseAuth.getInstance();
+
+        back = (Button) findViewById(R.id.reset_back);
+        back.setOnClickListener(this);
+        resetPasswordButton = (Button) findViewById(R.id.reset_resetPassword);
+        resetPasswordButton.setOnClickListener(this);
+
+        emailEditText = (EditText) findViewById(R.id.reset_editTextEmailAddress);
+
+        progressBar = (ProgressBar) findViewById(R.id.reset_progressBar);
     }
 }

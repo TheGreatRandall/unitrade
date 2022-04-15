@@ -15,18 +15,22 @@
         android:theme="@style/Theme.Unitrade">
         <activity
             android:name=".activity.ResetPasswordActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false" />
         <activity
             android:name=".activity.HomeActivity"
             android:exported="false" />
         <activity
             android:name=".activity.LoginActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false" />
         <activity
             android:name=".activity.RegisterActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false" />
         <activity
             android:name=".activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

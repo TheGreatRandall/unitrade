@@ -1,8 +1,10 @@
 package com.osu.unitrade.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +33,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d("Lifecycle", "------------login activity is on create----------");
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle("Login");
-        setContentView(R.layout.activity_login);
+
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_login);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_login_horizontal);
+        }
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -75,6 +82,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 userLogin();
                 break;
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            setContentView(R.layout.activity_login);
+        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            setContentView(R.layout.activity_login_horizontal);
+        }
+
+        mAuth = FirebaseAuth.getInstance();
+
+        back = (Button) findViewById(R.id.login_back);
+        back.setOnClickListener(this);
+        login = (Button) findViewById(R.id.login_loginButton);
+        login.setOnClickListener(this);
+
+        signUp = (TextView) findViewById(R.id.login_SignUp);
+        signUp.setOnClickListener(this);
+        forgetPassword = (TextView) findViewById(R.id.login_ForgetPassword);
+        forgetPassword.setOnClickListener(this);
+
+        editEmailAddress = (EditText) findViewById(R.id.login_editTextEmailAddress);
+        editEmailAddress.setText("chen.8095@osu.edu");
+        editPassword = (EditText) findViewById(R.id.login_editTextPassword);
+        editPassword.setText("123456");
+
+        progressBar = (ProgressBar) findViewById(R.id.login_progressBar);
     }
 
     private void userLogin() {
