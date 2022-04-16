@@ -11,15 +11,15 @@
         android:layout_width="247dp"
         android:layout_height="54dp"
 
-        android:text="All Listings"
+        android:text="@string/all_listing"
         android:textSize="30dp"
 
-        app:layout_constraintBottom_toBottomOf="@+id/alllistingList"
+        app:layout_constraintBottom_toTopOf="@+id/alllistingList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.151" />
 
     <ProgressBar
         android:id="@+id/loading_progressBar"
@@ -31,16 +31,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/alllistingList" />
 
+    <Button
+        android:id="@+id/nextPage"
+        android:layout_width="135dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/next_page"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.456" />
+
+    <Button
+        android:id="@+id/previousPage"
+        android:layout_width="135dp"
+        android:layout_height="48dp"
+        android:text="@string/back_page"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.851"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.245" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alllistingList"
-        android:layout_width="892dp"
-        android:layout_height="287dp"
+        android:layout_width="640dp"
+        android:layout_height="246dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.676">
+        app:layout_constraintVertical_bias="0.333">
 
     </androidx.recyclerview.widget.RecyclerView>
 

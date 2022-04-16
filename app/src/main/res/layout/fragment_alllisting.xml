@@ -31,15 +31,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/alllistingList" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/alllistingList"
-        android:layout_width="match_parent"
-        android:layout_height="577dp"
+    <Button
+        android:id="@+id/nextPage"
+        android:layout_width="135dp"
+        android:layout_height="48dp"
+        android:text="@string/next_page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.844"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toBottomOf="@+id/alllistingList"
+        app:layout_constraintVertical_bias="0.227" />
+
+    <Button
+        android:id="@+id/previousPage"
+        android:layout_width="135dp"
+        android:layout_height="48dp"
+        android:text="@string/back_page"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.119"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alllistingList"
+        app:layout_constraintVertical_bias="0.227" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/alllistingList"
+        android:layout_width="409dp"
+        android:layout_height="429dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.249">
 
     </androidx.recyclerview.widget.RecyclerView>
 

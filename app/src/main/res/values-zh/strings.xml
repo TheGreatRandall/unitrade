@@ -52,4 +52,6 @@
     <string name="add">添加</string>
     <string name="delete">删除</string>
     <string name="update">更新</string>
+    <string name="next_page">下一页</string>
+    <string name="back_page">上一页</string>
 </resources>
