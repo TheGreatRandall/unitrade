@@ -30,7 +30,7 @@
     <TextView
         android:layout_width="247dp"
         android:layout_height="54dp"
-        android:text="My Listings"
+        android:text="@string/my_listing"
         android:textSize="30dp"
         app:layout_constraintBottom_toTopOf="@+id/mylistingList"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
         android:id="@+id/add_listing_button"
         android:layout_width="106dp"
         android:layout_height="54dp"
-        android:text="Add"
+        android:text="@string/add"
         app:layout_constraintBottom_toTopOf="@+id/mylistingList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.947"

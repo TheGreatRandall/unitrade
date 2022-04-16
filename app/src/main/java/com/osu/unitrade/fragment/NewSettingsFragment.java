@@ -50,7 +50,7 @@ public class NewSettingsFragment extends PreferenceFragmentCompat {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getActivity(), "fail to get user", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.fail_get_user), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -60,7 +60,7 @@ public class NewSettingsFragment extends PreferenceFragmentCompat {
             button.setOnPreferenceClickListener(preference -> {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getActivity(), MainActivity.class));
-                Toast.makeText(getActivity(), "User logged out.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(R.string.user_logged_out), Toast.LENGTH_LONG).show();
                 return true;
             });
         }

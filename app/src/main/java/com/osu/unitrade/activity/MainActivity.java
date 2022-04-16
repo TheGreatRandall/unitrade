@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Unitrade");
+        getSupportActionBar().setTitle(getString(R.string.app_name));
         setContentView(R.layout.activity_main);
 
         register = (TextView) findViewById(R.id.register);

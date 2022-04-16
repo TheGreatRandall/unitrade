@@ -109,7 +109,7 @@ public class AllListingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), getString(R.string.failt_get_listing), Toast.LENGTH_SHORT).show();
             }
         });
 
