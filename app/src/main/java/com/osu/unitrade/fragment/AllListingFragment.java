@@ -115,7 +115,7 @@ public class AllListingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    database.limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                    database.limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             list.clear();
@@ -140,11 +140,7 @@ public class AllListingFragment extends Fragment {
                         }
                     });
                 } else {
-                    if (isAdded() && getActivity() != null) {
-                        Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Log.w("nullActivity", "no activity attached");
-                    }
+                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -250,24 +246,18 @@ public class AllListingFragment extends Fragment {
 
         progressBar.setVisibility(View.GONE);
 
-        nextPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getNextData();
-                pageIndex++;
-            }
+        nextPage.setOnClickListener(view -> {
+            getNextData();
+            pageIndex++;
         });
 
         if (pageIndex == 1) {
             backPage.setEnabled(false);
         } else {
             backPage.setEnabled(true);
-            backPage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getLastData();
-                    pageIndex--;
-                }
+            backPage.setOnClickListener(view -> {
+                getLastData();
+                pageIndex--;
             });
         }
     }
@@ -279,7 +269,7 @@ public class AllListingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    database.startAfter(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                    database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             list.clear();
@@ -300,7 +290,7 @@ public class AllListingFragment extends Fragment {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity(), getString(R.string.failt_get_listing), Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
@@ -320,15 +310,15 @@ public class AllListingFragment extends Fragment {
     }
 
     public void getNextData() {
-        pageIndex ++;
+        pageIndex++;
 
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
-        connectedRef.addValueEventListener(new ValueEventListener() {
+        connectedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    database.startAfter(oldestPostId).limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                    database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             progressBar.setVisibility(View.VISIBLE);
