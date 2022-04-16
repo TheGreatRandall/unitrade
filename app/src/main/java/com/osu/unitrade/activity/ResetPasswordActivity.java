@@ -31,7 +31,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Forget Password");
+        getSupportActionBar().setTitle(getString(R.string.forget_password));
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             setContentView(R.layout.activity_reset_password);
@@ -72,13 +72,13 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         String email = emailEditText.getText().toString().trim();
 
         if (email.isEmpty()) {
-            emailEditText.setError("Email is required!");
+            emailEditText.setError(getString(R.string.enter_email_error));
             emailEditText.requestFocus();
             return;
         }
 
         if (!Pattern.compile(regex).matcher(email).matches()) {
-            emailEditText.setError("Please provide valid email!");
+            emailEditText.setError(getString(R.string.email_wrong_error));
             emailEditText.requestFocus();
             return;
         }
@@ -86,14 +86,14 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         progressBar.setVisibility(View.VISIBLE);
         mauth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(ResetPasswordActivity.this, "Check your email to rest your password!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ResetPasswordActivity.this,getString(R.string.send_reset_email) , Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
 
                 Intent loginActivity = new Intent(ResetPasswordActivity.this, LoginActivity.class);
                 loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(loginActivity);
             } else {
-                Toast.makeText(ResetPasswordActivity.this, "Oops! Something wrong with sending reset email. Please again!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ResetPasswordActivity.this, getString(R.string.fail_to_send_reset), Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
             }
         });

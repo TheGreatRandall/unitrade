@@ -11,7 +11,7 @@
         android:layout_width="247dp"
         android:layout_height="54dp"
 
-        android:text="All Listings"
+        android:text="@string/all_listing"
         android:textSize="30dp"
 
         app:layout_constraintBottom_toTopOf="@+id/alllistingList"

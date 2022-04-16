@@ -56,13 +56,15 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             setContentView(R.layout.activity_home);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             setContentView(R.layout.activity_home_horizontal);
         }
 
-        getSupportActionBar().setTitle("Unitrade");
+        getSupportActionBar().setTitle(getString(R.string.app_name));
+
         allListing = (Button) findViewById(R.id.allListing);
 
         updateGPS();
@@ -147,7 +149,7 @@ public class HomeActivity extends AppCompatActivity {
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     updateGPS();
                 }else {
-                    Toast.makeText(this, "This app requires permission to be granted in order to work", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.need_permission), Toast.LENGTH_SHORT).show();
                     finish();
                 }
         }

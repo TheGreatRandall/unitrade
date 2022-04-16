@@ -127,7 +127,7 @@ public class AllListingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.w("cancel", "Listener was cancelled");
+                Toast.makeText(requireActivity(), getString(R.string.failt_get_listing), Toast.LENGTH_SHORT).show();
             }
         });
 

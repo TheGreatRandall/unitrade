@@ -25,13 +25,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Unitrade");
+
+        getSupportActionBar().setTitle(getString(R.string.app_name));
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             setContentView(R.layout.activity_main);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             setContentView(R.layout.activity_main_horizontal);
         }
+
 
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);

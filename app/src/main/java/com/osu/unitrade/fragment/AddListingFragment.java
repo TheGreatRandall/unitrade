@@ -110,7 +110,7 @@ public class AddListingFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireActivity(), "fail to get user", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), getString(R.string.fail_get_user), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -143,7 +143,7 @@ public class AddListingFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(),getString(R.string.failt_get_listing) , Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -166,7 +166,7 @@ public class AddListingFragment extends Fragment {
                     title.setText("");
                     description.setText("");
                     key = mDatabase.child("Listings").push().getKey();
-                    Toast.makeText(requireActivity(), "success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
                     Bundle bundle = new Bundle();
                     bundle.putDouble("currentLongitude", currentLongitude);
                     bundle.putDouble("currentLatitude", currentLatitude);
@@ -174,7 +174,7 @@ public class AddListingFragment extends Fragment {
                     fragment.setArguments(bundle);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
                 } else {
-                    Toast.makeText(requireActivity(), "failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), getString(R.string.add_fail), Toast.LENGTH_SHORT).show();
                 }
                 progressBar.setVisibility(View.GONE);
             });

@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Register");
+        getSupportActionBar().setTitle(getString(R.string.register_title));
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             setContentView(R.layout.activity_register);
@@ -110,19 +110,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String password = editPassword.getText().toString().trim();
 
         if (nickname.isEmpty()) {
-            editNickname.setError("Enter your nickname.");
+            editNickname.setError(getString(R.string.enter_nickname_error));
             editNickname.requestFocus();
             return;
         }
 
         if (!Pattern.compile(regex).matcher(email).matches()) {
-            editEmailAddress.setError("Please enter a valid OSU email.");
+            editEmailAddress.setError(getString(R.string.email_wrong_error));
             editEmailAddress.requestFocus();
             return;
         }
 
-        if (password.length() < 6 || password.length() > 16) {
-            editPassword.setError("Password length should be from 6 to 15 characters.");
+        if (password.length() < 6) {
+            editPassword.setError(getString(R.string.password_len_less));
+            editPassword.requestFocus();
+            return;
+        }
+
+        if (password.length() > 16) {
+            editPassword.setError(getString(R.string.password_len_more));
             editPassword.requestFocus();
             return;
         }
@@ -140,13 +146,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             if (!user.isEmailVerified()) {
-                                Toast.makeText(RegisterActivity.this, "A verification email has been sent to your email.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, getString(R.string.send_verify), Toast.LENGTH_LONG).show();
                                 user.sendEmailVerification();
                                 progressBar.setVisibility(View.GONE);
                             }
 
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Failed to register database.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, getString(R.string.fail_to_register_db), Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }
@@ -154,7 +160,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w("Error", "createUserWithEmail:failure", task.getException());
-                Toast.makeText(RegisterActivity.this, "Failed to register.",
+                Toast.makeText(RegisterActivity.this, getString(R.string.fail_to_register),
                         Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
             }

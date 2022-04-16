@@ -1,21 +1,54 @@
 <resources>
     <string name="app_name">Unitrade</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="key_username">key_username</string>
     <string name="key_email">key_email</string>
+
+    <string name="need_permission">This app requires permission to be granted in order to work</string>
+    <string name="login_title">Login</string>
+    <string name="register_title">Register</string>
+    <string name="enter_email_error">Enter your email.</string>
+    <string name="email_wrong_error">Please enter a valid OSU email.</string>
+    <string name="enter_password_error">Enter your password.</string>
+
+    <string name="password_len_less">The minimum length of the password should be 6 characters.</string>
+    <string name="enter_nickname_error">Enter your nickname.</string>
+    <string name="password_len_more">The maximum length of the password should be 16 characters.</string>
+    <string name="user_logged_in">User logged in.</string>
+    <string name="not_verified">Your email has not been verified! An email verification has been sent to your email!</string>
+    <string name="wrong_password">Invalid email address or password entered to login!</string>
+    <string name="send_verify">A verification email has been sent to your email.</string>
+    <string name="fail_to_register_db">Failed to register database.</string>
+    <string name="fail_to_register">Failed to register.</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="send_reset_email">Check your email to reset your password.</string>
+
+    <string name="fail_to_send_reset">Something wrong with sending reset email. Please try again.</string>
+    <string name="fail_get_user">fail to get user</string>
+    <string name="failt_get_listing">fail to get listings</string>
+    <string name="add_success">Successfully added.</string>
+    <string name="add_fail">Fail to add.</string>
+    <string name="user_logged_out">User logged out.</string>
+
+    <string name="all_listing">All listing</string>
+    <string name="my_listing">My listing</string>
+    <string name="setting">Setting</string>
+    <string name="back">Back</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="new_user">New User? Sign up here</string>
+    <string name="ques_forget">Forget Password?</string>
+    <string name="welcome">Welcome to Unitrade</string>
+    <string name="nickname">Nickname</string>
+<string name="reset_pass">Reset Your Password</string>
+    <string name="location">Location</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="add_listing">Add Listing</string>
+    <string name="submit">Submit</string>
+    <string name="enter_title">Enter title</string>
+    <string name="enter_description">Enter description</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
 </resources>

@@ -32,13 +32,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("Lifecycle", "------------login activity is on create----------");
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Login");
+
+
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             setContentView(R.layout.activity_login);
         }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             setContentView(R.layout.activity_login_horizontal);
         }
+
+        getSupportActionBar().setTitle(getString(R.string.login_title));
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -118,31 +121,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String password = editPassword.getText().toString().trim();
 
         if (email.isEmpty()) {
-            editEmailAddress.setError("Enter your email.");
+            editEmailAddress.setError(getString(R.string.enter_email_error));
             editEmailAddress.requestFocus();
             return;
         }
 
         if (!Pattern.compile(regex).matcher(email).matches()) {
-            editEmailAddress.setError("Please enter a valid OSU email.");
+            editEmailAddress.setError(getString(R.string.email_wrong_error));
             editEmailAddress.requestFocus();
             return;
         }
 
         if (password.isEmpty()) {
-            editPassword.setError("Enter your password.");
+            editPassword.setError(getString(R.string.enter_password_error));
             editPassword.requestFocus();
             return;
         }
 
         if (password.length() < 6) {
-            editPassword.setError("The minimum length of the password should be 6 characters.");
+            editPassword.setError(getString(R.string.password_len_less));
             editPassword.requestFocus();
             return;
         }
 
         if (password.length() > 16) {
-            editPassword.setError("The maximum length of the password should be 16 characters.");
+            editPassword.setError(getString(R.string.password_len_more));
             editPassword.requestFocus();
             return;
         }
@@ -155,17 +158,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 if (user.isEmailVerified()) {
                     Log.d("Success", "signInWithEmailAndPassword:success");
-                    Toast.makeText(LoginActivity.this, "User logged in.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,getString(R.string.user_logged_in) , Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 } else {
-                    Toast.makeText(LoginActivity.this, "Your email hasn't been verified! An email verification has been sent to your email!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.not_verified), Toast.LENGTH_LONG).show();
                     user.sendEmailVerification();
                     progressBar.setVisibility(View.GONE);
                 }
             } else {
                 Log.w("Error", "signInWithEmailAndPassword:failure", task.getException());
-                Toast.makeText(LoginActivity.this, "Invalid email address or password entered to login!", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.wrong_password) , Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
             }
         });
