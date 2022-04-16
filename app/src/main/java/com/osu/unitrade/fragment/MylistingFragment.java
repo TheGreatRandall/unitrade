@@ -128,7 +128,11 @@ public class MylistingFragment extends Fragment {
                     });
 
                 } else {
-                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                    if(isAdded() && getActivity() != null){
+                        Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Log.w("nullActivity", "no activity attached");
+                    }
                 }
             }
 

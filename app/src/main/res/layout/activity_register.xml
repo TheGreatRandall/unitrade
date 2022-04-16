@@ -94,7 +94,7 @@
       android:id="@+id/register_SignIn"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/login"
+      android:text="@string/register_login"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.498"

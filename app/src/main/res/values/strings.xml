@@ -34,6 +34,7 @@
     <string name="setting">Setting</string>
     <string name="back">Back</string>
     <string name="login">Login</string>
+    <string name="register_login">Already sign up? Log in here</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="new_user">New User? Sign up here</string>

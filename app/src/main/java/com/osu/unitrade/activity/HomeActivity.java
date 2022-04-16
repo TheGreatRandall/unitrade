@@ -99,8 +99,13 @@ public class HomeActivity extends AppCompatActivity {
         myListing.setOnClickListener(view -> {
             startLocationUpdates();
             Bundle bundle = new Bundle();
-            bundle.putDouble("currentLongitude", currentLocation.getLongitude());
-            bundle.putDouble("currentLatitude", currentLocation.getLatitude());
+            if(currentLocation != null){
+                bundle.putDouble("currentLongitude", currentLocation.getLongitude());
+                bundle.putDouble("currentLatitude", currentLocation.getLatitude());
+            }else{
+                bundle.putDouble("currentLongitude", 0);
+                bundle.putDouble("currentLatitude", 0);
+            }
             MylistingFragment fragment = new MylistingFragment();
             fragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();

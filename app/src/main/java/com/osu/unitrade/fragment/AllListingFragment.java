@@ -1,5 +1,6 @@
 package com.osu.unitrade.fragment;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -121,7 +122,11 @@ public class AllListingFragment extends Fragment {
                         }
                     });
                 }else{
-                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                    if(isAdded() && getActivity() != null){
+                        Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Log.w("nullActivity", "no activity attached");
+                    }
                 }
             }
 
@@ -176,7 +181,11 @@ public class AllListingFragment extends Fragment {
                                     }
                                 });
                             }else{
-                                Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                                if(isAdded() && getActivity() != null){
+                                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Log.w("nullActivity", "no activity attached");
+                                }
                             }
                         }
 
@@ -244,7 +253,11 @@ public class AllListingFragment extends Fragment {
                         }
                     });
                 }else{
-                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                    if(isAdded() && getActivity() != null){
+                        Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Log.w("nullActivity", "no activity attached");
+                    }
                 }
             }
 
@@ -297,7 +310,11 @@ public class AllListingFragment extends Fragment {
                                     }
                                 });
                             }else{
-                                Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                                if(isAdded() && getActivity() != null){
+                                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Log.w("nullActivity", "no activity attached");
+                                }
                             }
                         }
 
@@ -313,5 +330,6 @@ public class AllListingFragment extends Fragment {
         });
 
     }
+
 
 }

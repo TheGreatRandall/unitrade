@@ -3,6 +3,7 @@ package com.osu.unitrade.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -64,6 +66,7 @@ public class AddListingFragment extends Fragment {
     private Double currentLongitude, currentLatitude;
 
     private ProgressBar progressBar;
+    private View rootView;
 
     public AddListingFragment() {
         // Required empty public constructor
@@ -122,7 +125,12 @@ public class AddListingFragment extends Fragment {
         // Inflate the layout for this fragment
         Log.d("Lifecycle", "------------profile fragment is onCreateView----------");
 
-        View rootView = inflater.inflate(R.layout.fragment_addlisting, container, false);
+        if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            rootView = inflater.inflate(R.layout.fragment_addlisting, container, false);
+        }else if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            rootView = inflater.inflate(R.layout.fragment_addlisting_horizontal, container, false);
+        }
+
         submit = rootView.findViewById(R.id.addListingSubmit);
         title = rootView.findViewById(R.id.AddListingTitle);
         description = rootView.findViewById(R.id.addListingDescription);
@@ -182,6 +190,80 @@ public class AddListingFragment extends Fragment {
         return rootView;
     }
     
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
 
+        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        ConstraintLayout layout = (ConstraintLayout) getView();
+        if(layout != null){
+            layout.removeAllViewsInLayout();
+        }
+
+        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            rootView = layoutInflater.inflate(R.layout.fragment_alllisting, layout, true);
+            layoutInflater.inflate(R.layout.fragment_alllisting, layout, false);
+        }else if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
+            rootView = layoutInflater.inflate(R.layout.fragment_alllisting_horizontal, layout, true);
+        }
+
+        submit = rootView.findViewById(R.id.addListingSubmit);
+        title = rootView.findViewById(R.id.AddListingTitle);
+        description = rootView.findViewById(R.id.addListingDescription);
+
+        if (listID != null) {
+            key = listID;
+
+            mDatabase.child("Listings/" + listID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Listing listing = snapshot.getValue(Listing.class);
+                    if (listing != null) {
+                        title.setText(listing.getTitle());
+                        description.setText(listing.getDescription());
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(requireActivity(),getString(R.string.failt_get_listing) , Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        progressBar = rootView.findViewById(R.id.addListing_progressBar);
+        submit.setOnClickListener(view -> {
+            progressBar.setVisibility(View.VISIBLE);
+            if (key == null) {
+                key = mDatabase.child("Listings").push().getKey();
+            }
+
+
+            Listing listing = new Listing(nickname, email, title.getText().toString(), description.getText().toString(), String.valueOf(currentLongitude), String.valueOf(currentLatitude));
+            Map<String, Object> listingValues = listing.toMap();
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put("/Listings/" + key, listingValues);
+            childUpdates.put("/User-Listings/" + userID + "/" + key, listingValues);
+            mDatabase.updateChildren(childUpdates).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    title.setText("");
+                    description.setText("");
+                    key = mDatabase.child("Listings").push().getKey();
+                    Toast.makeText(requireActivity(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("currentLongitude", currentLongitude);
+                    bundle.putDouble("currentLatitude", currentLatitude);
+                    MylistingFragment fragment = new MylistingFragment();
+                    fragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                } else {
+                    Toast.makeText(requireActivity(), getString(R.string.add_fail), Toast.LENGTH_SHORT).show();
+                }
+                progressBar.setVisibility(View.GONE);
+            });
+        });
+
+    }
 
 }
