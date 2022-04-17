@@ -73,6 +73,13 @@ public class AddListingFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("title", title.getText().toString());
+        outState.putString("description", description.getText().toString());
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
@@ -117,6 +124,11 @@ public class AddListingFragment extends Fragment {
         submit = rootView.findViewById(R.id.addListingSubmit);
         title = rootView.findViewById(R.id.AddListingTitle);
         description = rootView.findViewById(R.id.addListingDescription);
+
+        if(savedInstanceState != null){
+            title.setText(savedInstanceState.getString("title"));
+            description.setText(savedInstanceState.getString("description"));
+        }
 
         if (listID != null) {
             key = listID;
