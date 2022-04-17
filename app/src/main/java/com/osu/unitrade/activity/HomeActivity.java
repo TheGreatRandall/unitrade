@@ -3,6 +3,7 @@ package com.osu.unitrade.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -55,9 +56,18 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         getSupportActionBar().setTitle(getString(R.string.app_name));
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
-        allListing = (Button) findViewById(R.id.allListing);
+        Fragment existingFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if(existingFragment != null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, existingFragment).commit();
+        }else{
+            Bundle bundle = new Bundle();
+            bundle.putString("nickname", HomeActivity.this.nickname);
+            AllListingFragment fragment = new AllListingFragment();
+            fragment.setArguments(bundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        }
 
         updateGPS();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -79,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        allListing = (Button) findViewById(R.id.allListing);
         allListing.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString("nickname", HomeActivity.this.nickname);

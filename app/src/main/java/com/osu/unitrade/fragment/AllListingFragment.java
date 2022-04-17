@@ -69,11 +69,20 @@ public class AllListingFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("firstPostId", firstPostId);
+        outState.putString("oldestPostId", oldestPostId);
+        outState.putInt("pageIndex", pageIndex);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            Log.d("saveState", "Get a saved InstanceState!");
-            savedInstanceState.getLong("id", 0);
+        if(savedInstanceState != null){
+            firstPostId = savedInstanceState.getString("firstPostId");
+            oldestPostId = savedInstanceState.getString("oldestPostId");
+            pageIndex = savedInstanceState.getInt("pageIndex");
         }
     }
 
@@ -81,11 +90,7 @@ public class AllListingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            rootView = inflater.inflate(R.layout.fragment_alllisting, container, false);
-        } else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            rootView = inflater.inflate(R.layout.fragment_alllisting, container, false);
-        }
+        rootView = inflater.inflate(R.layout.fragment_alllisting, container, false);
 
         nextPage = rootView.findViewById(R.id.nextPage);
         backPage = rootView.findViewById(R.id.previousPage);
@@ -102,32 +107,36 @@ public class AllListingFragment extends Fragment {
         listingAdapter = new AllListingAdapter(getActivity(), requireContext(), list);
         recyclerView.setAdapter(listingAdapter);
 
-        pageIndex = 1;
+        if(firstPostId != null){
+            getCurrentPageData();
+        }else{
+            pageIndex = 1;
 
-        database.limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                int count = 0;
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    oldestPostId = dataSnapshot.getKey();
-                    if (count == 0) {
-                        firstPostId = oldestPostId;
+            database.limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    list.clear();
+                    int count = 0;
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        oldestPostId = dataSnapshot.getKey();
+                        if (count == 0) {
+                            firstPostId = oldestPostId;
+                        }
+
+                        Listing listing = dataSnapshot.getValue(Listing.class);
+                        list.add(listing);
+                        count++;
                     }
 
-                    Listing listing = dataSnapshot.getValue(Listing.class);
-                    list.add(listing);
-                    count++;
+                    listingAdapter.notifyDataSetChanged();
                 }
 
-                listingAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         progressBar.setVisibility(View.GONE);
 
@@ -149,51 +158,29 @@ public class AllListingFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-        ConstraintLayout layout = (ConstraintLayout) getView();
-        if (layout != null) {
-            layout.removeAllViewsInLayout();
-        }
-
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            rootView = layoutInflater.inflate(R.layout.fragment_alllisting, layout, true);
-            layoutInflater.inflate(R.layout.fragment_alllisting, layout, false);
-        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            rootView = layoutInflater.inflate(R.layout.fragment_alllisting, layout, true);
-        }
-
-        progressBar = rootView.findViewById(R.id.loading_progressBar);
-        recyclerView = rootView.findViewById(R.id.alllistingList);
-
-        db = FirebaseDatabase.getInstance();
-        database = db.getReference("Listings");
-        database.keepSynced(true);
-
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        list = new ArrayList<>();
-        listingAdapter = new AllListingAdapter(getActivity(), requireContext(), list);
-        recyclerView.setAdapter(listingAdapter);
-
+    private void getCurrentPageData(){
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    database.limitToFirst(5).addValueEventListener(new ValueEventListener() {
+                    database.startAt(firstPostId).limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             list.clear();
+                            int count = 0;
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 oldestPostId = dataSnapshot.getKey();
+                                if (count == 0) {
+                                    firstPostId = oldestPostId;
+                                }
+
                                 Listing listing = dataSnapshot.getValue(Listing.class);
                                 list.add(listing);
+                                count++;
                             }
+
                             listingAdapter.notifyDataSetChanged();
                         }
 
@@ -202,7 +189,8 @@ public class AllListingFragment extends Fragment {
                             Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
                         }
                     });
-                } else {
+
+                }else {
                     if (isAdded() && getActivity() != null) {
                         Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
                     } else {
@@ -210,29 +198,11 @@ public class AllListingFragment extends Fragment {
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w("cancel", "Listener was cancelled");
             }
         });
-
-        progressBar.setVisibility(View.GONE);
-
-        nextPage.setOnClickListener(view -> {
-            getNextData();
-            pageIndex++;
-        });
-
-        backPage.setOnClickListener(view -> {
-            if(pageIndex == 1){
-                Toast.makeText(requireActivity(), getString(R.string.fail_get_last_page), Toast.LENGTH_SHORT).show();
-            }else{
-                getPreviousData();
-                pageIndex--;
-            }
-        });
-
     }
 
     public void getPreviousData() {

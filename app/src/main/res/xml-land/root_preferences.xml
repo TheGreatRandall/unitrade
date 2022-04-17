@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="User">
+
+        <Preference
+            app:key="@string/key_username"
+            app:summary="temp"
+            app:title="Username" />
+
+        <Preference
+            app:key="@string/key_email"
+            app:summary="temp"
+            app:title="Email" />
+        <Preference
+            app:key="logoutButton"
+            app:title="Logout" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
