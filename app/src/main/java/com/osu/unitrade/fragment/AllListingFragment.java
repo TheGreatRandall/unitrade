@@ -109,69 +109,47 @@ public class AllListingFragment extends Fragment {
 
         pageIndex = 1;
 
-        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
-        connectedRef.addValueEventListener(new ValueEventListener() {
+        database.limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
-                    database.limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            list.clear();
-                            int count = 0;
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                oldestPostId = dataSnapshot.getKey();
-                                if (count == 0) {
-                                    firstPostId = oldestPostId;
-                                }
+                list.clear();
+                int count = 0;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    oldestPostId = dataSnapshot.getKey();
+                    if (count == 0) {
+                        firstPostId = oldestPostId;
+                    }
 
-                                Listing listing = dataSnapshot.getValue(Listing.class);
-                                list.add(listing);
-                                count++;
-                            }
-
-                            listingAdapter.notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                    Listing listing = dataSnapshot.getValue(Listing.class);
+                    list.add(listing);
+                    count++;
                 }
+
+                listingAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireActivity(), getString(R.string.failt_get_listing), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
             }
         });
 
         progressBar.setVisibility(View.GONE);
 
-        nextPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getNextData();
-                pageIndex++;
-            }
+        nextPage.setOnClickListener(view-> {
+            getNextData();
+            pageIndex++;
         });
 
-        if (pageIndex == 1) {
-            backPage.setEnabled(false);
-        } else {
-            backPage.setEnabled(true);
-            backPage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getLastData();
-                    pageIndex--;
-                }
-            });
-        }
+        backPage.setOnClickListener(view -> {
+            if(pageIndex == 1){
+                Toast.makeText(requireActivity(), getString(R.string.fail_get_last_page), Toast.LENGTH_SHORT).show();
+            }else{
+                getPreviousData();
+                pageIndex--;
+            }
+
+        });
 
         return rootView;
     }
@@ -251,25 +229,25 @@ public class AllListingFragment extends Fragment {
             pageIndex++;
         });
 
-        if (pageIndex == 1) {
-            backPage.setEnabled(false);
-        } else {
-            backPage.setEnabled(true);
-            backPage.setOnClickListener(view -> {
-                getLastData();
+        backPage.setOnClickListener(view -> {
+            if(pageIndex == 1){
+                Toast.makeText(requireActivity(), getString(R.string.fail_get_last_page), Toast.LENGTH_SHORT).show();
+            }else{
+                getPreviousData();
                 pageIndex--;
-            });
-        }
+            }
+        });
+
     }
 
-    public void getLastData() {
+    public void getPreviousData() {
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    database.orderByKey().startAfter(oldestPostId).limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
+                    database.orderByKey().endBefore(firstPostId).limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             list.clear();
@@ -310,8 +288,6 @@ public class AllListingFragment extends Fragment {
     }
 
     public void getNextData() {
-        pageIndex++;
-
         DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
         connectedRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -331,6 +307,7 @@ public class AllListingFragment extends Fragment {
                                 }
                                 Listing listing = dataSnapshot.getValue(Listing.class);
                                 list.add(listing);
+                                count++;
                             }
                             progressBar.setVisibility(View.GONE);
                             listingAdapter.notifyDataSetChanged();

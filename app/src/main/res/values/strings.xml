@@ -24,6 +24,7 @@
 
     <string name="fail_to_send_reset">Something wrong with sending reset email. Please try again.</string>
     <string name="fail_get_user">fail to get user</string>
+    <string name="fail_get_last_page">This is the first page.</string>
     <string name="failt_get_listing">fail to get listings</string>
     <string name="add_success">Successfully added.</string>
     <string name="add_fail">Fail to add.</string>

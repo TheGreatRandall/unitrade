@@ -24,6 +24,7 @@
 
     <string name="fail_to_send_reset">重置密码邮件发送失败</string>
     <string name="fail_get_user">无法获取用户信息</string>
+    <string name="fail_get_last_page">您已经到达了第一页</string>
     <string name="failt_get_listing">无法获得待售列表</string>
     <string name="add_success">添加成功</string>
     <string name="add_fail">添加失败</string>
