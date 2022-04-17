@@ -165,7 +165,7 @@ public class AllListingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
                 if (connected) {
-                    database.startAt(firstPostId).limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
+                    database.orderByKey().startAt(firstPostId).limitToFirst(5).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             list.clear();

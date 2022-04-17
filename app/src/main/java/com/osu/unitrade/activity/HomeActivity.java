@@ -52,22 +52,16 @@ public class HomeActivity extends AppCompatActivity {
     public Location currentLocation;
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getSupportActionBar().setTitle(getString(R.string.app_name));
         setContentView(R.layout.activity_home);
-
-        Fragment existingFragment = getSupportFragmentManager().findFragmentById(R.id.container);
-        if(existingFragment != null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, existingFragment).commit();
-        }else{
-            Bundle bundle = new Bundle();
-            bundle.putString("nickname", HomeActivity.this.nickname);
-            AllListingFragment fragment = new AllListingFragment();
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-        }
 
         updateGPS();
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -114,7 +108,6 @@ public class HomeActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });
 
-
         setting = (Button) findViewById(R.id.setting);
         setting.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
@@ -124,8 +117,14 @@ public class HomeActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
         });
 
-        AllListingFragment fragment = new AllListingFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        Fragment existingFragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if(existingFragment != null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, existingFragment).commit();
+        }else{
+            AllListingFragment fragment = new AllListingFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+        }
+
     }
 
     private void startLocationUpdates() {
