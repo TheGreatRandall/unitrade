@@ -155,34 +155,33 @@ public class AddListingFragment extends Fragment {
         progressBar = rootView.findViewById(R.id.addListing_progressBar);
         submit.setOnClickListener(view -> {
             progressBar.setVisibility(View.VISIBLE);
-            for (int i = 0; i < 9; i++) {
-
+            if(key == null) {
                 key = mDatabase.child("Listings").push().getKey();
-
-
-                Listing listing = new Listing(nickname, email, title.getText().toString() + i, description.getText().toString() + i, String.valueOf(currentLongitude), String.valueOf(currentLatitude));
-                Map<String, Object> listingValues = listing.toMap();
-                Map<String, Object> childUpdates = new HashMap<>();
-                childUpdates.put("/Listings/" + key, listingValues);
-                childUpdates.put("/User-Listings/" + userID + "/" + key, listingValues);
-                mDatabase.updateChildren(childUpdates).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        title.setText("");
-                        description.setText("");
-                        key = mDatabase.child("Listings").push().getKey();
-                        Toast.makeText(requireActivity(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
-                        Bundle bundle = new Bundle();
-                        bundle.putDouble("currentLongitude", currentLongitude);
-                        bundle.putDouble("currentLatitude", currentLatitude);
-                        MylistingFragment fragment = new MylistingFragment();
-                        fragment.setArguments(bundle);
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-                    } else {
-                        Toast.makeText(requireActivity(), getString(R.string.add_fail), Toast.LENGTH_SHORT).show();
-                    }
-                    progressBar.setVisibility(View.GONE);
-                });
             }
+
+            Listing listing = new Listing(nickname, email, title.getText().toString(), description.getText().toString(), String.valueOf(currentLongitude), String.valueOf(currentLatitude));
+            Map<String, Object> listingValues = listing.toMap();
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put("/Listings/" + key, listingValues);
+            childUpdates.put("/User-Listings/" + userID + "/" + key, listingValues);
+            mDatabase.updateChildren(childUpdates).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    title.setText("");
+                    description.setText("");
+                    key = mDatabase.child("Listings").push().getKey();
+                    Toast.makeText(requireActivity(), getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+                    Bundle bundle = new Bundle();
+                    bundle.putDouble("currentLongitude", currentLongitude);
+                    bundle.putDouble("currentLatitude", currentLatitude);
+                    MylistingFragment fragment = new MylistingFragment();
+                    fragment.setArguments(bundle);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
+                } else {
+                    Toast.makeText(requireActivity(), getString(R.string.add_fail), Toast.LENGTH_SHORT).show();
+                }
+                progressBar.setVisibility(View.GONE);
+            });
+
             });
 
         return rootView;

@@ -63,9 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgetPassword.setOnClickListener(this);
 
         editEmailAddress = (EditText) findViewById(R.id.login_editTextEmailAddress);
-        editEmailAddress.setText("chen.8095@osu.edu");
         editPassword = (EditText) findViewById(R.id.login_editTextPassword);
-        editPassword.setText("123456");
 
         if (savedInstanceState != null) {
             editEmailAddress.setText(savedInstanceState.getString("editEmailAddress"));
