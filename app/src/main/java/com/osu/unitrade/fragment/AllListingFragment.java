@@ -147,7 +147,7 @@ public class AllListingFragment extends Fragment {
 
         backPage.setOnClickListener(view -> {
             if(pageIndex == 1){
-                Toast.makeText(requireActivity(), getString(R.string.fail_get_last_page), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), getString(R.string.fail_get_previous_page), Toast.LENGTH_SHORT).show();
             }else{
                 getPreviousData();
                 pageIndex--;
@@ -263,7 +263,17 @@ public class AllListingFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             progressBar.setVisibility(View.VISIBLE);
-                            list.clear();
+                            int count1 = 0;
+                            for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                count1++;
+                                break;
+                            }
+                            if(count1 != 0){
+                                list.clear();
+                            }else{
+                                Toast.makeText(requireActivity(), getString(R.string.fail_geet_next_page), Toast.LENGTH_SHORT).show();
+                            }
+
                             int count = 0;
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 oldestPostId = dataSnapshot.getKey();

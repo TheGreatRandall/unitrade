@@ -25,11 +25,11 @@
         android:layout_height="54dp"
         android:text="@string/submit"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
+        app:layout_constraintEnd_toStartOf="@+id/addListingDescription"
+        app:layout_constraintHorizontal_bias="0.363"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.918" />
+        app:layout_constraintVertical_bias="0.445" />
 
     <EditText
         android:id="@+id/AddListingTitle"
@@ -41,15 +41,15 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.458"
+        app:layout_constraintHorizontal_bias="0.403"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.072" />
+        app:layout_constraintVertical_bias="0.099" />
 
     <EditText
         android:id="@+id/addListingDescription"
-        android:layout_width="434dp"
-        android:layout_height="252dp"
+        android:layout_width="436dp"
+        android:layout_height="207dp"
         android:background="#E6E8E4"
         android:ems="10"
         android:gravity="start|top"
@@ -58,7 +58,7 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.466"
+        app:layout_constraintHorizontal_bias="0.404"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AddListingTitle"
         app:layout_constraintVertical_bias="0.0" />

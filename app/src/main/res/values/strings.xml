@@ -24,7 +24,8 @@
 
     <string name="fail_to_send_reset">Something wrong with sending reset email. Please try again.</string>
     <string name="fail_get_user">fail to get user</string>
-    <string name="fail_get_last_page">This is the first page.</string>
+    <string name="fail_get_previous_page">This is the first page.</string>
+    <string name="fail_geet_next_page">This is the last page.</string>
     <string name="failt_get_listing">fail to get listings</string>
     <string name="add_success">Successfully added.</string>
     <string name="add_fail">Fail to add.</string>
@@ -54,5 +55,5 @@
     <string name="delete">Delete</string>
     <string name="update">Update</string>
     <string name="next_page">Next Page</string>
-    <string name="back_page">Last Page</string>
+    <string name="back_page">Previous Page</string>
 </resources>
