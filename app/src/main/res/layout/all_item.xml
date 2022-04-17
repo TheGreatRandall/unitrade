@@ -10,8 +10,8 @@
 
     <TextView
         android:id="@+id/location"
-        android:layout_width="355dp"
-        android:layout_height="32dp"
+        android:layout_width="357dp"
+        android:layout_height="59dp"
         android:text="@string/location"
         android:textColor="@color/black"
         android:textSize="20sp"
