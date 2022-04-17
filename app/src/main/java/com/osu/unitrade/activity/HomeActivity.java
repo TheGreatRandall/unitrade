@@ -27,12 +27,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.osu.unitrade.fragment.AddListingFragment;
 import com.osu.unitrade.fragment.AllListingFragment;
 import com.osu.unitrade.fragment.MylistingFragment;
 import com.osu.unitrade.R;
 import com.osu.unitrade.fragment.NewSettingsFragment;
-import com.osu.unitrade.fragment.SettingFragment;
 import com.osu.unitrade.model.User;
 
 public class HomeActivity extends AppCompatActivity {
@@ -56,14 +54,8 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            setContentView(R.layout.activity_home);
-        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setContentView(R.layout.activity_home_horizontal);
-        }
-
         getSupportActionBar().setTitle(getString(R.string.app_name));
+        setContentView(R.layout.activity_main);
 
         allListing = (Button) findViewById(R.id.allListing);
 
@@ -99,10 +91,10 @@ public class HomeActivity extends AppCompatActivity {
         myListing.setOnClickListener(view -> {
             startLocationUpdates();
             Bundle bundle = new Bundle();
-            if(currentLocation != null){
+            if (currentLocation != null) {
                 bundle.putDouble("currentLongitude", currentLocation.getLongitude());
                 bundle.putDouble("currentLatitude", currentLocation.getLatitude());
-            }else{
+            } else {
                 bundle.putDouble("currentLongitude", 0);
                 bundle.putDouble("currentLatitude", 0);
             }
@@ -127,7 +119,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
             }
         }
@@ -149,99 +141,31 @@ public class HomeActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
+        switch (requestCode) {
             case PERMISSIONS_FINE_LOCATION:
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     updateGPS();
-                }else {
+                } else {
                     Toast.makeText(this, getString(R.string.need_permission), Toast.LENGTH_SHORT).show();
                     finish();
                 }
         }
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            setContentView(R.layout.activity_home);
-        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setContentView(R.layout.activity_home_horizontal);
-        }
-
-        getSupportActionBar().setTitle("Unitrade");
-        allListing = (Button) findViewById(R.id.allListing);
-
-        updateGPS();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        reference = FirebaseDatabase.getInstance().getReference("Users");
-        userID = user.getUid();
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User userProfile = snapshot.getValue(User.class);
-                if (userProfile != null) {
-                    String nick = userProfile.nickname;
-                    HomeActivity.this.nickname = nick;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(HomeActivity.this, "fail to get user", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        allListing.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("nickname", HomeActivity.this.nickname);
-            AllListingFragment fragment = new AllListingFragment();
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-        });
-
-        myListing = (Button) findViewById(R.id.myListing);
-        myListing.setOnClickListener(view -> {
-            startLocationUpdates();
-            Bundle bundle = new Bundle();
-            bundle.putDouble("currentLongitude", currentLocation.getLongitude());
-            bundle.putDouble("currentLatitude", currentLocation.getLatitude());
-            MylistingFragment fragment = new MylistingFragment();
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-        });
-
-
-        setting = (Button) findViewById(R.id.setting);
-        setting.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("nickname", HomeActivity.this.nickname);
-            NewSettingsFragment fragment = new NewSettingsFragment();
-            fragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-        });
-
-        AllListingFragment fragment = new AllListingFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).commit();
-    }
-
-
-
     private void updateGPS() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if(ActivityCompat.checkSelfPermission
+        if (ActivityCompat.checkSelfPermission
                 (this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     currentLocation = location;
                 }
             });
-        }else{
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
             }
         }

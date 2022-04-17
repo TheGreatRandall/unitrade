@@ -1,21 +1,12 @@
 package com.osu.unitrade.fragment;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,14 +16,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -128,7 +111,7 @@ public class AddListingFragment extends Fragment {
         if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             rootView = inflater.inflate(R.layout.fragment_addlisting, container, false);
         }else if(getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            rootView = inflater.inflate(R.layout.fragment_addlisting_horizontal, container, false);
+            rootView = inflater.inflate(R.layout.fragment_addlisting, container, false);
         }
 
         submit = rootView.findViewById(R.id.addListingSubmit);
@@ -204,7 +187,7 @@ public class AddListingFragment extends Fragment {
             rootView = layoutInflater.inflate(R.layout.fragment_alllisting, layout, true);
             layoutInflater.inflate(R.layout.fragment_alllisting, layout, false);
         }else if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            rootView = layoutInflater.inflate(R.layout.fragment_alllisting_horizontal, layout, true);
+            rootView = layoutInflater.inflate(R.layout.fragment_alllisting, layout, true);
         }
 
         submit = rootView.findViewById(R.id.addListingSubmit);

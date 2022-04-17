@@ -1,6 +1,5 @@
 package com.osu.unitrade.fragment;
 
-import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
@@ -11,14 +10,11 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -26,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.osu.unitrade.R;
 import com.osu.unitrade.adapter.AllListingAdapter;
@@ -89,7 +84,7 @@ public class AllListingFragment extends Fragment {
         if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             rootView = inflater.inflate(R.layout.fragment_alllisting, container, false);
         } else if (getActivity().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            rootView = inflater.inflate(R.layout.fragment_alllisting_horizontal, container, false);
+            rootView = inflater.inflate(R.layout.fragment_alllisting, container, false);
         }
 
         nextPage = rootView.findViewById(R.id.nextPage);
@@ -168,7 +163,7 @@ public class AllListingFragment extends Fragment {
             rootView = layoutInflater.inflate(R.layout.fragment_alllisting, layout, true);
             layoutInflater.inflate(R.layout.fragment_alllisting, layout, false);
         } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            rootView = layoutInflater.inflate(R.layout.fragment_alllisting_horizontal, layout, true);
+            rootView = layoutInflater.inflate(R.layout.fragment_alllisting, layout, true);
         }
 
         progressBar = rootView.findViewById(R.id.loading_progressBar);

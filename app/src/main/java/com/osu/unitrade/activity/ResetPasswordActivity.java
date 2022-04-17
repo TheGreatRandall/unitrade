@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.osu.unitrade.R;
 
@@ -27,18 +25,25 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     private Button back, resetPasswordButton;
     private ProgressBar progressBar;
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("emailEditText", emailEditText.getText().toString());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        emailEditText.setText(savedInstanceState.getString("emailEditText"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(getString(R.string.forget_password));
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            setContentView(R.layout.activity_reset_password);
-        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setContentView(R.layout.activity_reset_password_horizontal);
-        }
-
+        setContentView(R.layout.activity_reset_password);
 
         mauth = FirebaseAuth.getInstance();
 
@@ -48,6 +53,10 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         resetPasswordButton.setOnClickListener(this);
 
         emailEditText = (EditText) findViewById(R.id.reset_editTextEmailAddress);
+
+        if(savedInstanceState != null){
+            emailEditText.setText(savedInstanceState.getString("emailEditText"));
+        }
 
         progressBar = (ProgressBar) findViewById(R.id.reset_progressBar);
     }
@@ -86,7 +95,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         progressBar.setVisibility(View.VISIBLE);
         mauth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(ResetPasswordActivity.this,getString(R.string.send_reset_email) , Toast.LENGTH_LONG).show();
+                Toast.makeText(ResetPasswordActivity.this, getString(R.string.send_reset_email), Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
 
                 Intent loginActivity = new Intent(ResetPasswordActivity.this, LoginActivity.class);
@@ -99,25 +108,4 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         });
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        if(newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            setContentView(R.layout.activity_reset_password);
-        }else if(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setContentView(R.layout.activity_reset_password_horizontal);
-        }
-
-        mauth = FirebaseAuth.getInstance();
-
-        back = (Button) findViewById(R.id.reset_back);
-        back.setOnClickListener(this);
-        resetPasswordButton = (Button) findViewById(R.id.reset_resetPassword);
-        resetPasswordButton.setOnClickListener(this);
-
-        emailEditText = (EditText) findViewById(R.id.reset_editTextEmailAddress);
-
-        progressBar = (ProgressBar) findViewById(R.id.reset_progressBar);
-    }
 }

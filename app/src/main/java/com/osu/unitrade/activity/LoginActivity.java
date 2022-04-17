@@ -1,6 +1,5 @@
 package com.osu.unitrade.activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -29,19 +28,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressBar progressBar;
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("editEmailAddress", editEmailAddress.getText().toString());
+        outState.putString("editPassword", editPassword.getText().toString());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        editEmailAddress.setText(savedInstanceState.getString("editEmailAddress"));
+        editPassword.setText(savedInstanceState.getString("editPassword"));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("Lifecycle", "------------login activity is on create----------");
         super.onCreate(savedInstanceState);
-
-
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            setContentView(R.layout.activity_login);
-        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setContentView(R.layout.activity_login_horizontal);
-        }
-
         getSupportActionBar().setTitle(getString(R.string.login_title));
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -59,6 +66,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editEmailAddress.setText("chen.8095@osu.edu");
         editPassword = (EditText) findViewById(R.id.login_editTextPassword);
         editPassword.setText("123456");
+
+        if (savedInstanceState != null) {
+            editEmailAddress.setText(savedInstanceState.getString("editEmailAddress"));
+            editPassword.setText(savedInstanceState.getString("editPassword"));
+        }
 
         progressBar = (ProgressBar) findViewById(R.id.login_progressBar);
     }
@@ -87,7 +99,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    @Override
+   /* @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
@@ -108,13 +120,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgetPassword = (TextView) findViewById(R.id.login_ForgetPassword);
         forgetPassword.setOnClickListener(this);
 
-        editEmailAddress = (EditText) findViewById(R.id.login_editTextEmailAddress);
-        editEmailAddress.setText("chen.8095@osu.edu");
-        editPassword = (EditText) findViewById(R.id.login_editTextPassword);
-        editPassword.setText("123456");
-
         progressBar = (ProgressBar) findViewById(R.id.login_progressBar);
-    }
+    }*/
+
 
     private void userLogin() {
         String email = editEmailAddress.getText().toString().trim();
@@ -158,7 +166,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 if (user.isEmailVerified()) {
                     Log.d("Success", "signInWithEmailAndPassword:success");
-                    Toast.makeText(LoginActivity.this,getString(R.string.user_logged_in) , Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.user_logged_in), Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 } else {
@@ -168,7 +176,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             } else {
                 Log.w("Error", "signInWithEmailAndPassword:failure", task.getException());
-                Toast.makeText(LoginActivity.this, getString(R.string.wrong_password) , Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.wrong_password), Toast.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
             }
         });

@@ -33,15 +33,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private ProgressBar progressBar;
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString("editNickName", editNickname.getText().toString());
+        outState.putString("editEmailAddress", editEmailAddress.getText().toString());
+        outState.putString("editPassword", editPassword.getText().toString());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        editNickname.setText(savedInstanceState.getString("editNickName"));
+        editEmailAddress.setText(savedInstanceState.getString("editEmailAddress"));
+        editPassword.setText(savedInstanceState.getString("editPassword"));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(getString(R.string.register_title));
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            setContentView(R.layout.activity_register);
-        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setContentView(R.layout.activity_register_horizontal);
-        }
+        setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -55,6 +68,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         editNickname = (EditText) findViewById(R.id.register_editTextNickname);
         editEmailAddress = (EditText) findViewById(R.id.register_editTextEmailAddress);
         editPassword = (EditText) findViewById(R.id.register_editTextPassword);
+
+        if (savedInstanceState != null) {
+            editNickname.setText(savedInstanceState.getString("editNickName"));
+            editEmailAddress.setText(savedInstanceState.getString("editEmailAddress"));
+            editPassword.setText(savedInstanceState.getString("editPassword"));
+        }
 
         progressBar = (ProgressBar) findViewById(R.id.register_progressBar);
     }
@@ -76,32 +95,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 loginActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(loginActivity);
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            setContentView(R.layout.activity_register);
-        }else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            setContentView(R.layout.activity_register_horizontal);
-        }
-
-        mAuth = FirebaseAuth.getInstance();
-
-        back = (Button) findViewById(R.id.register_back);
-        back.setOnClickListener(this);
-        registerSubmit = (Button) findViewById(R.id.registerSubmit);
-        registerSubmit.setOnClickListener(this);
-        signIn = (TextView) findViewById(R.id.register_SignIn);
-        signIn.setOnClickListener(this);
-
-        editNickname = (EditText) findViewById(R.id.register_editTextNickname);
-        editEmailAddress = (EditText) findViewById(R.id.register_editTextEmailAddress);
-        editPassword = (EditText) findViewById(R.id.register_editTextPassword);
-
-        progressBar = (ProgressBar) findViewById(R.id.register_progressBar);
     }
 
     private void submit() {
