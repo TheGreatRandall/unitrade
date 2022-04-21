@@ -123,13 +123,13 @@ public class MylistingFragment extends Fragment {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
-                            Toast.makeText(requireActivity(), "fail to get listings", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireActivity(), getString(R.string.fail_get_listing), Toast.LENGTH_SHORT).show();
                         }
                     });
 
                 } else {
                     if(isAdded() && getActivity() != null){
-                        Toast.makeText(requireActivity(), "Unable to get the Internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireActivity(), getString(R.string.fail_get_connection), Toast.LENGTH_SHORT).show();
                     }else{
                         Log.w("nullActivity", "no activity attached");
                     }
@@ -138,7 +138,7 @@ public class MylistingFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(requireActivity(), getString(R.string.failt_get_listing), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), getString(R.string.fail_get_listing), Toast.LENGTH_SHORT).show();
             }
         });
 

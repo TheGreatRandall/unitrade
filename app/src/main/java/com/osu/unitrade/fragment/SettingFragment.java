@@ -56,7 +56,7 @@ public class SettingFragment extends Fragment {
         logout.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getActivity(), MainActivity.class));
-            Toast.makeText(getActivity(), "User logged out.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.user_logged_out), Toast.LENGTH_LONG).show();
         });
         return rootView;
     }

@@ -26,7 +26,9 @@
     <string name="fail_get_user">fail to get user</string>
     <string name="fail_get_previous_page">This is the first page.</string>
     <string name="fail_geet_next_page">This is the last page.</string>
-    <string name="failt_get_listing">fail to get listings</string>
+    <string name="fail_get_listing">fail to get listings</string>
+    <string name="fail_get_connection">Unable to get the Internet connection</string>
+    <string name="fail_get_location">Unable to get this listing's location</string>
     <string name="add_success">Successfully added.</string>
     <string name="add_fail">Fail to add.</string>
     <string name="user_logged_out">User logged out.</string>

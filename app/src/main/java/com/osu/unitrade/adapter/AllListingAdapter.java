@@ -53,7 +53,7 @@ public class AllListingAdapter extends RecyclerView.Adapter<AllListingAdapter.My
             List<Address> addresses = geocoder.getFromLocation(Double.parseDouble(listing.getLatitude()), Double.parseDouble(listing.getLongitude()), 1);
             holder.location.setText(addresses.get(0).getAddressLine(0));
         }catch (Exception E){
-            holder.location.setText("Unable to get this listing's location");
+            holder.location.setText(context.getString(R.string.fail_get_location));
         }
 
     }
