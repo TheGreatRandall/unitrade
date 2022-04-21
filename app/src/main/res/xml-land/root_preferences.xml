@@ -6,15 +6,15 @@
         <Preference
             app:key="@string/key_username"
             app:summary="temp"
-            app:title="Username" />
+            app:title="@string/nickname" />
 
         <Preference
             app:key="@string/key_email"
             app:summary="temp"
-            app:title="Email" />
+            app:title="@string/email" />
         <Preference
             app:key="logoutButton"
-            app:title="Logout" />
+            app:title="@string/logout" />
 
     </PreferenceCategory>
 

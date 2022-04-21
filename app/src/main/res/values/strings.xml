@@ -45,6 +45,7 @@
     <string name="ques_forget">Forget Password?</string>
     <string name="welcome">Welcome to Unitrade</string>
     <string name="nickname">Nickname</string>
+    <string name="logout">Logout</string>
     <string name="reset_pass">Reset Your Password</string>
     <string name="location">Location</string>
     <string name="title">Title</string>
