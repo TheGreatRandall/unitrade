@@ -147,7 +147,7 @@ public class AddListingFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(requireActivity(), getString(R.string.failt_get_listing), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireActivity(), getString(R.string.fail_get_listing), Toast.LENGTH_LONG).show();
                 }
             });
         }
@@ -224,7 +224,7 @@ public class AddListingFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(requireActivity(), getString(R.string.failt_get_listing), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireActivity(), getString(R.string.fail_get_listing), Toast.LENGTH_LONG).show();
                 }
             });
         }
